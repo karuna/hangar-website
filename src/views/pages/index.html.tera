@@ -1,6 +1,59 @@
 {% extends "base_layout" %}
 
 {% block content %}
-    <h1>Hello World</h1>
-    <p>Content here...</p>
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                What is Hangar?
+            </h1>
+            <h2 class="subtitle">
+                Hangar is an opionated web framework using Rust programming language. Built using <a href="https://rocket.rs/" target="_blank">Rocket</a>, <a href="https://diesel.rs/" target="_blank">Diesel</a>, and other Rust libraries.
+            </h2>
+        </div>
+    </section>
+    <section class="section">
+        <h1 class="title">Quickstart</h1>
+        <ol>
+            <li>
+                Install rustup if you don't have <a href="https://www.rust-lang.org/" target="_blank">
+                Rust programming language</a> compiler installed on your system.
+                You need to use nightly version for now in order to run Hangar project.
+                <pre>
+curl https://sh.rustup.rs -sSf | sh
+rustup install nightly
+rustup default nightly
+                </pre>
+            </li>
+            <li>
+                We are using Diesel as Database ORM. To install Diesel CLI:
+                <pre>cargo install diesel_cli</pre>
+            </li>
+            <li>
+                Install Hangar CLI:
+                <pre>cargo install hangar</pre>
+            </li>
+            <li>
+                Use Hangar CLI to generate new project:
+                <pre>hangar new --name new_project --database sqlite --database-url db.sqlite</pre>
+            </li>
+            <li>
+                Setup the database for the project. By default it comes with users table:
+                <pre>
+cd new_project
+hangar db setup
+hangar print-schema > src/schema.rs
+                </pre>
+            </li>
+            <li>
+                You can take a look at <code>Rocket.toml</code> or <code>.env</code> file to edit application configurations.
+                After that we can start the application.
+                <pre>
+                    cargo run
+                </pre>
+            </li>
+            <li>
+                Open your browser at http://localhost:8000.
+            </li>
+        </ol>
+    <section class="section">
 {% endblock content %}

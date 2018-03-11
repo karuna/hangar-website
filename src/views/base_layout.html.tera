@@ -13,15 +13,27 @@
   <script src={{macros::asset_url(filename="application.js")}}></script>
 </head>
 <body>
-  <main class="wrapper">
-    <section class="container" id="examples">
+  <section class="section">
+    <nav class="navbar is-success" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <img src={{macros::asset_url(filename="logo.svg")}} alt="Hangar Homepage">
+        </a>
+        <a class="navbar-item" href="/docs">Docs</a>
+        <a class="navbar-item" href="/examples">Examples</a>
+        <a class="navbar-item" href="/about">About</a>
+        <div class="navbar-burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+    <section class="container">
       <div class="container">
         {% block content %}{% endblock content %}
       </div>
     </section>
-    <section class="container" id="debug">
-      <pre>{{__tera_context}}</pre>
-    </section>
-  </main>
+  </section>
 </body>
 </html>

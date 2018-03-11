@@ -10,6 +10,9 @@ pub fn routes(attached_rocket: Rocket) -> Rocket {
 fn root_urls() -> Vec<Route> {
     routes![
         pages_controller::index,
+        pages_controller::about,
+        pages_controller::docs,
+        pages_controller::examples,
     ]
 }
 
