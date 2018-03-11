@@ -1,0 +1,28 @@
+{
+  "name": "rocket-hangar",
+  "version": "1.0.0",
+  "description": "Rust web framework, using [Rocket](https://rocket.rs), [Diesel](https://diesel.rs), and [stdweb](https://github.com/koute/stdweb)",
+  "main": "index.js",
+  "scripts": {
+    "start-js": "parcel -d src/assets client/assets/application.js",
+    "start-css": "parcel -d src/assets client/assets/application.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/karuna/hangar.git"
+  },
+  "keywords": [],
+  "author": "John Doe <user@example.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/karuna/hangar/issues"
+  },
+  "homepage": "https://gitlab.com/karuna/hangar#README",
+  "dependencies": {
+    "global": "^4.3.2",
+    "parcel-bundler": "^1.6.2"
+  },
+  "devDependencies": {
+    "parcel-plugin-cargo-web": "^0.1.0"
+  }
+}
