@@ -7,7 +7,7 @@
                 What is Hangar?
             </h1>
             <h2 class="subtitle">
-                Hangar is an opionated web framework using Rust programming language. Built using <a href="https://rocket.rs/" target="_blank">Rocket</a>, <a href="https://diesel.rs/" target="_blank">Diesel</a>, and other Rust libraries.
+                Hangar is an opinionated web framework using Rust programming language. Built using <a href="https://rocket.rs/" target="_blank">Rocket</a>, <a href="https://diesel.rs/" target="_blank">Diesel</a>, and other Rust libraries.
             </h2>
         </div>
     </section>
