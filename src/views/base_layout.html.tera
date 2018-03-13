@@ -6,8 +6,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Karuna Murti">
-  <meta name="description" content="This is Hangar, an opionated full fledged web framework for rust.">
-  <title>{{header.title}}</title>
+  <meta charset="utf-8">
+  <title>Hangar Web Framework</title>
+  <meta name="description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries.">
+  <meta itemprop="name" content="Hangar Web Framework">
+  <meta itemprop="description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hangar Web Framework">
+  <meta name="twitter:description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries.">
+  <meta name="og:title" content="Hangar Web Framework">
+  <meta name="og:description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries.">
+  <meta name="og:url" content="http://hangar-project.org">
+  <meta name="og:site_name" content="Hangar Web Framework">
+  <meta name="og:locale" content="en_US">
+  <meta name="og:type" content="website">
   <link rel="icon" type="image/svg" sizes="any" href={{macros::asset_url(filename="favicon.svg")}} />
   <link rel="stylesheet" type="text/css" href={{macros::asset_url(filename="application.css")}} />
   <script src={{macros::asset_url(filename="application.js")}}></script>
