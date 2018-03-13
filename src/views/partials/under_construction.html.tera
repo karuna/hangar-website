@@ -1,0 +1,5 @@
+<section class="section is-center">
+  <img src={{macros::asset_url(filename="under-construction.svg")}}/>
+  <br>
+  <a href="http://www.freepik.com">Designed by Freepik</a>
+</section>
