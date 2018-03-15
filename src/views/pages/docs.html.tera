@@ -1,5 +1,6 @@
 {% extends "base_layout" %}
 
 {% block content %}
+  {% include "partials/side_menu" %}
   {% include "partials/under_construction" %}
 {% endblock content %}
