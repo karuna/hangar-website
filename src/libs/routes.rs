@@ -13,6 +13,7 @@ fn root_urls() -> Vec<Route> {
         pages_controller::index,
         pages_controller::about,
         pages_controller::examples,
+        pages_controller::google_verification,
     ]
 }
 

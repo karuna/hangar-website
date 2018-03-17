@@ -18,3 +18,8 @@ pub fn examples() -> Template {
     let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
     Template::render("pages/examples", &context)
 }
+
+#[get("/google36a72838f3e96989.html")]
+pub fn google_verification() -> &'static str {
+    "google-site-verification: google36a72838f3e96989.html"
+}
