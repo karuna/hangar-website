@@ -1,0 +1,85 @@
+<h2>Diesel CLI</h2>
+<p>
+  <code>diesel</code> is a command line for Diesel ORM.
+  It can be used to setup, migrate (versioning), and create schema of your database.
+  <br>
+  It requires one parameters on its command <code>--database-url</code>.
+  <br>
+  You can either supply the parameter everytime you run a command,
+  or you can put it in <code>.env</code> file with content like this:
+  <pre>export DATABASE_URL=hangar.sqlite</pre>
+</p>
+<h3>Database URL</h3>
+<p>There are 3 RDBMS currently supported. These are the url format for those 3 RDBMS:</p>
+<ul>
+  <li>PostgreSQL <code>postgres://user:password@hostname/db_name</code></li>
+  <li>MySQL (Or MariaDB) <code>mysql://user:password@hostname/db_name</code></li>
+  <li>SQLite <code>path/to/db.sqlite</code></li>
+</ul>
+<h3>Diesel CLI Commands</h3>
+<p>
+  You can see the help by issuing command <code>diesel --help</code>, but let's see how it's usually used.
+</p>
+<ol>
+  <li>
+    Make a new Rust project:
+    <pre>
+cargo new test_diesel --bin
+cd test_diesel
+    </pre>
+  </li>
+  <li>
+    Set a <code>.env</code> file inside the project folder with content like this:
+    <pre>export DATABASE_URL=hangar.sqlite</pre>
+  </li>
+  <li>
+    Setup the database with this command:
+    <pre>diesel setup</pre>
+    That command will create the database and on a project folder with existing migrations will also run the migrations.
+  </li>
+  <li>
+    Let's make a new table. You can add migrations using this command:
+    <pre>diesel migration generate make_items</pre>
+    <code>make_items</code> is the name of the migration file.
+    <br>
+    That command will create a new migration file inside <code>migrations</code> folder inside the project folder.
+    <br>
+    Let's check the content of the <code>migrations</code> folder:
+    <pre>migrations/2018-03-17-075249_make_items</pre>
+    The timestamp of the migrations file and folder will be different because you are generating at a different time than when we make this documentation.
+  </li>
+  <li>
+    There are 2 files inside the <code>migrations/2018-03-17-075249_make_items</code> folder: <code>up.sql</code> and <code>down.sql</code>. The <code>up.sql</code> file is for the sql command to do, e.g. <code>CREATE TABLE</code>, and the <code>down.sql</code> is for the sql command to revert, e.g. <code>DROP TABLE</code>.
+    <br>
+    Let's do something simple. On <code>up.sql</code> write the following SQL code:
+    <pre>
+CREATE TABLE items (
+  id int NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+    </pre>
+    And on <code>down.sql</code> let's write the followng SQL code:
+    <pre>
+DROP TABLE items;
+    </pre>
+  </li>
+  <li>
+    Let's run the migrations:
+    <pre>diesel migration run</pre>
+  </li>
+  <li>
+    Let's print the database schema:
+    <pre>diesel print-schema > src/schema.rs</pre>
+    That schema files contain macros that will generate appropriate mods that can be used by your application.
+  </li>
+  <li>
+    Apparently we just made a mistake, we need a quantity column in the <code>items</code> table.
+    Let's revert the migration.
+    <pre>diesel migration revert</pre>
+    It's always a good idea to print the database schema after migration or rollback.
+    <pre>diesel print-schema > src/schema.rs</pre>
+    Note, it's usually a bad idea to modify old migrations file. Usually you want to make a new migration file to modify existing database schema. But this time it's fine since we have not committed the code and no push to production environment yet.
+  </li>
+</ol>
+<p>Well, that's it. Those are the basics of Diesel CLI.</p>

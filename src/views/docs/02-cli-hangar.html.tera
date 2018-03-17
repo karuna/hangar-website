@@ -1,0 +1,47 @@
+<h2>Hangar CLI</h2>
+<p>
+  To generate a new application you can use this command:
+  <pre>
+    hangar new
+  </pre>
+  <br>
+  There is mandatory parameter: <code>--new name</code>
+  <br>
+  The other 3 parameters are:
+  <pre>
+--author <&zwj;AUTHOR>          Author of the project: `John Doe <user@example.com>`
+--database <&zwj;DB>            Diesel database connection you want to use for the Hangar Project.
+                           Valid value: postgresql, mysql, or sqlite.
+                           Default: postgresql
+--database-url <&zwj;DB_URL>    Url for your database
+                           postgresql: postgres://user:password@host/db_name
+                           mysql: mysql://user:password@host/db_name
+                           sqlite: path/to/db.sqlite
+  </pre>
+</p>
+<p>
+  For managing the database, you can use this command:
+  <pre>
+hangar db
+  </pre>
+  It's basically just a wrapper for <code>diesel</code> cli, so you can use the exact same command.
+  <pre>
+hangar db setup
+hangar db print-schema > src/schema.rs
+  </pre>
+</p>
+
+<p>
+  For building and running the application you can use this command:
+  <pre>
+hangar build
+hangar run
+  </pre>
+  It's basically just a wrapper for <code>cargo</code> cli, so you can use the exact same command.
+  <br>
+  Right now it's better to use the <code>cargo</code> command since there's still a bug on the output.
+  <pre>
+cargo build
+cargo run
+  </pre>
+</p>

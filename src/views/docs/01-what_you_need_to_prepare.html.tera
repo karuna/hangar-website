@@ -1,0 +1,68 @@
+{% extends "base_layout" %}
+
+{% block content %}
+<div class="columns">
+  {% include "partials/side_menu" %}
+  <div class="column is-10">
+    <div class="content">
+      <h1>Preparation</h1>
+      <h2>Learning Rust</h2>
+      <p>
+        <a href="https://www.rust-lang.org" target="_blank">The Rust Programming Language</a>
+        is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.
+        <br>
+        You can learn more about Rust Programming Language by reading
+        <a href="https://doc.rust-lang.org/book/" target="_blank">The Rust Programming Language Book</a>
+        and practice by doing <a href="https://rustbyexample.com/" target="_blank">Rust By Example</a>.
+      </p>
+      <p>
+        There are many ways to get help, for example by joining
+        <a href="https://users.rust-lang.org/">The Rust Programming Language Forum</a>.
+        You can see more list in this page:
+        <a href="https://www.rust-lang.org/en-US/community.html" target="_blank">The Rust Community</a>.
+      </p>
+      <h2>Installing Rust</h2>
+      <p>
+        You can get the installer for rust by doing instructions here:
+        <a href="https://www.rustup.rs/" target="_blank">https://www.rustup.rs/</a>.
+        <br>
+        After installing rustup, you need to set rustup to use nightly compiler.
+        <pre>
+rustup install nightly
+        </pre>
+        After that you need to tell rustup to use nightly by default:
+        <pre>
+rustup default nightly
+        </pre>
+      </p>
+      <h2>Cargo Package Manager</h2>
+      <p>
+        Cargo is Rust sanctioned package manager. Read more about Cargo:
+        <a href="https://doc.rust-lang.org/cargo/" target="_blank">https://doc.rust-lang.org/cargo/</a>
+      </p>
+      <h2>Diesel ORM</h2>
+      <p>
+        Hangar uses Diesel as it's ORM. You can learn more about Diesel here:
+        <a href="http://diesel.rs/" target="_blank">http://diesel.rs/</a>
+      </p>
+      <h2>Installing Diesel CLI</h2>
+      <p>
+        Hangar uses Diesel Command Line Interface as one of it's tool.
+        After installing rustup you must install Diesel CLI.
+        <br>
+        To install Diesel CLI:
+        <pre>
+cargo install diesel_cli
+        </pre>
+      </p>
+      <h2>Installing Hangar CLI</h2>
+      <p>
+        To install Hangar CLI:
+        <pre>
+cargo install hangar
+        </pre>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock content %}

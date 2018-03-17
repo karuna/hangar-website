@@ -1,0 +1,61 @@
+{% extends "base_layout" %}
+
+{% block content %}
+<div class="columns">
+  {% include "partials/side_menu" %}
+  <div class="column is-10">
+    <div class="content">
+      <h1>Hello World</h1>
+      <p>Let's start by creating a mandatory hello world page. Note beside using <code>cargo run</code>  to run the application,<br/>you can also use <code>./watch.sh</code> to watch the file changes and reload the server automatically.<br/>Sometimes the script is exiting because of broken compilation, so you might need to start manually again.</p>
+      <ol>
+        <li>
+          Generate new application:
+          <pre>
+hangar new --name test_app --author "Will Smoth <&zwj;will_s@example.com>" --database sqlite --database-url=test_app.sqlite
+cd test_app
+          </pre>
+        </li>
+        <li>
+          Setup the database
+          <pre>
+hangar db setup
+hangar db print-schema > schema.rs
+          </pre>
+        </li>
+        <li>On <code>src/libs/routes.rs</code> file add new route:
+          <pre>
+fn root_urls() -> Vec<Route> {
+    routes![
+        ...
+        pages_controller::hello_world
+    ]
+}
+          </pre>
+        </li>
+        <li>On <code>src/controllers/pages_controller.rs</code> add a new action:
+          <pre>
+#[get("/hello_world")]
+pub fn hello_world() -> Template {
+    let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
+    Template::render("pages/hello_world", &context)
+}
+          </pre>
+        </li>
+        <li>Make a new Tera template file on <code>views/pages/hellow_world.html.tera</code>:
+          <pre>
+<&zwj;h1>Hello World!<&zwj;/h1>
+<&zwj;p>Welcome to Hangar application.<&zwj;/p>
+          </pre>
+        </li>
+        <li>
+          Run the application:
+          <pre>
+./watch.sh
+          </pre>
+        </li>
+        <li>Open the server: <a href="http://localhost:8000/hello_world">http://localhost:8000/hello_world</a></li>
+      </ol>
+    </div>
+  </div>
+</div>
+{% endblock content %}

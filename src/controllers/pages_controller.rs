@@ -13,12 +13,6 @@ pub fn about() -> Template {
     Template::render("pages/about", &context)
 }
 
-#[get("/docs")]
-pub fn docs() -> Template {
-    let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
-    Template::render("pages/docs", &context)
-}
-
 #[get("/examples")]
 pub fn examples() -> Template {
     let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());

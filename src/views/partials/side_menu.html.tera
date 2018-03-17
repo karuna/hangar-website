@@ -1,0 +1,16 @@
+<div class="column is-2">
+    <aside class="menu">
+      <p class="menu-label">Table of Contents</p>
+      <ul class="menu-list">
+        <li>
+          <a href="/docs/01-what_you_need_to_prepare">Preparation</a>
+        </li>
+        <li>
+          <a href="/docs/02-cli">Command Line Interface</a>
+        </li>
+        <li>
+          <a href="/docs/03-hello_world">Hello World</a>
+        </li>
+      </ul>
+    </aside>
+  </div>
