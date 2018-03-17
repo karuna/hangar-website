@@ -11,6 +11,9 @@
         <li>
           <a href="/docs/03-hello_world">Hello World</a>
         </li>
+        <li>
+          <a href="/docs/04-configurations">Configurations</a>
+        </li>
       </ul>
     </aside>
   </div>

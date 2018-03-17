@@ -1,0 +1,109 @@
+{% extends "base_layout" %}
+
+{% block content %}
+<div class="columns">
+  {% include "partials/side_menu" %}
+  <div class="column is-10">
+    <div class="content">
+      <h1>Configurations</h1>
+      <p>
+        Hangar supports regular <a href="https://rocket.rs/guide/configuration/" target="_blank">Rocket's configuration</a>, but Hangar also add some of its own configurations.
+        <br>
+        There are 2 files used for configurations. It is recommended that you don't commit these 2 files, but don't lose them either since there are important bits like password salt for your site. If you lost it then all of your user may not be able to access your site anymore.
+      </p>
+      <p>
+        First is the <code>.env</code> file. This file is used by Diesel CLI to do various database operation.
+        The content of the file is in the <a href="/docs/02-cli">Command Line Interface</a> part.
+      </p>
+      <p>The second one is extra keys besides regular Rocket configurations in <code>Rocket.toml</code></p>
+      <ul>
+        <li>
+          <code>access_token_timeout_days</code> integer: number of days before the access token for user timed out.
+        </li>
+        <li>
+          <code>password_salt</code> string between 8 bytes to 2<sup>32</sup> - 1 bytes: password salt for user authentication. Hangar uses <a href="https://en.wikipedia.org/wiki/Argon2" target="_blank">Argon2 Algorithm</a>, very secure password hashing algorithm.
+        </li>
+        <li>
+          <code>assets_dir</code> string: path for assets folder. Note the path of the folder must be inside the working directory of Rocket application.
+        </li>
+        <li>
+          <code>assets_host</code> string: the domain which the assets will be served from. Currently (0.0.3) it's not used in the application yet.
+        </li>
+        <li>
+          <code>serve_assets</code> boolean: whether the application serves assets or not.
+        </li>
+        <li>
+          <code>database_url</code> string: database connection url. Look at <a href="/docs/02-cli">Command Line Interface</a> part for the format.
+        </li>
+        <li>
+          <code>database_pool</code> integer: number of connection pool to your database.
+        </li>
+        <li>
+          <code>terminal_logger</code> boolean: whether the application show request log (common log format) to the stdout or not. Currently it's still clashing with Rocket's own logger, also since the application has many workers, you might see garbled output because the output is async.
+        </li>
+        <li>
+          <code>file_logger</code> boolean: whether the application write request log (common log format) to log file or not. Since the application has many workers, you might see the output in wrong time order.
+        </li>
+        <li>
+          <code>file_logger_dir_path</code> string: path for log folder. Note the path of the folder must be inside the working directory of Rocket application.
+        </li>
+        <li>
+          <code>log_level</code> string: log level for Hangar's file and terminal logger. You can see the complete level here: <a href="https://docs.rs/slog/2.1.1/slog/enum.Level.html" target="_blank">https://docs.rs/slog/2.1.1/slog/enum.Level.html</a>.
+        </li>
+        <li>
+          <code>mailer</code> object: mailer configuration. Example:
+          <pre>mailer = { enabled = true, transport = "file", mail_send_dir = "/tmp" }</pre>
+          The configurations for email:
+          <h4>Email Object Configuration</h4>
+          <ul>
+            <li>
+              <code>enabled</code> boolean: use mailer system or not.
+            </li>
+            <li>
+              <code>transport</code> string: one of the following:
+              <code>"smtp"</code>, <code>"sendmail"</code>, <code>"file"</code>
+              You may need file email for test environment.
+            </li>
+          </ul>
+          <h4>Sendmail Configuration</h4>
+          <ul>
+            <li>
+              <code>sendmail_path</code> string: sendmail binary path in the system.
+            </li>
+          </ul>
+          <h4>File Email Configuration</h4>
+          <ul>
+            <li>
+              <code>mail_send_dir</code> string: the directory where the email output will be. Can be on any part of the filesystem.
+            </li>
+          </ul>
+          <h4>SMTP Configuration</h4>
+          <ul>
+            <li>
+              <code>domain</code> string: SMTP domain.
+            </li>
+            <li>
+              <code>username</code> string: SMTP username.
+            </li>
+            <li>
+              <code>password</code> string: SMTP password.
+            </li>
+            <li>
+              <code>mechanism</code> string: send mechanism, one of the following: <code>"plain"</code>, <code>"login"</code>, or <code>"crammd5"</code>
+            </li>
+            <li>
+              <code>reuse</code> string: whether reuse SMTP connection or not, one of the following: <code>"reuseunlimited"</code>, <code>"reuselimited"</code>, <code>"noreuse"</code>
+            </li>
+            <li>
+              <code>reuse_limit</code> integer: how many times to reuse SMTP connection, only for <code>"reuselimited"</code>
+            </li>
+            <li>
+              <code>security</code> string: one of the following: <code>"none"</code>, <code>"opportunistic"</code>, <code>"required"</code>, <code>"wrapper"</code>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}

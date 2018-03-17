@@ -24,3 +24,9 @@ pub fn _03() -> Template {
     let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
     Template::render("docs/03-hello_world", &context)
 }
+
+#[get("/04-configurations")]
+pub fn _04() -> Template {
+    let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
+    Template::render("docs/04-configurations", &context)
+}
