@@ -23,3 +23,11 @@ pub fn examples() -> Template {
 pub fn google_verification() -> &'static str {
     "google-site-verification: google36a72838f3e96989.html"
 }
+
+#[get("/BingSiteAuth.xml")]
+pub fn bing_verification() -> &'static str {
+    "<?xml version=\"1.0\"?>
+<users>
+	<user>4E67BB81192FF0870E818D882DA362A5</user>
+</users>"
+}
