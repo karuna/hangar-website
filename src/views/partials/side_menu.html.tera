@@ -14,6 +14,24 @@
         <li>
           <a href="/docs/04-configurations">Configurations</a>
         </li>
+        <li>
+          <a href="/docs/05-routes">Routes</a>
+        </li>
+        <li>
+          <a href="/docs/06-controllers">Controllers</a>
+        </li>
+        <li>
+          <a href="/docs/07-actions">Actions</a>
+        </li>
+        <li>
+          <a href="/docs/08-views">Views</a>
+        </li>
+        <li>
+          <a href="/docs/09-models">Models</a>
+        </li>
+        <li>
+          <a href="/docs/10-middleware">Middleware</a>
+        </li>
       </ul>
     </aside>
   </div>
