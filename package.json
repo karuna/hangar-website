@@ -12,7 +12,7 @@
     "url": "git+ssh://git@gitlab.com/karuna/hangar.git"
   },
   "keywords": [],
-  "author": "John Doe <user@example.com>",
+  "author": "Karuna Murti <karuna.murti@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://gitlab.com/karuna/hangar/issues"
