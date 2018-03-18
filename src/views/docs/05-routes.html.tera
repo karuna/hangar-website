@@ -6,7 +6,29 @@
   <div class="column is-10">
     <div class="content">
       <h1>Routes</h1>
-      <p>TBA</p>
+      <p>To add new route, just add it in <code>src/lib/routes.rs</code>. You can add a function which return <code>Vec<&zwj;Route></code>, and mount the Vector to a mountpoint.</p>
+      <p>For example:</p>
+      <pre>
+pub fn routes(attached_rocket: Rocket) -> Rocket {
+    attached_rocket
+        ...
+        .mount("/posts", post_urls())
+}
+
+fn post_urls() -> Vec<&zwj;Route> {
+    routes![
+        posts_controller::new,
+    ]
+}
+      </pre>
+      <p>Or directly create a Vector:</p>
+      <pre>
+pub fn routes(attached_rocket: Rocket) -> Rocket {
+    attached_rocket
+        ...
+        .mount("/posts", routes![posts_controller::new])
+}
+      </pre>
     </div>
   </div>
 </div>

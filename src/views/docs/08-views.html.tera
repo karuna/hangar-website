@@ -6,7 +6,132 @@
   <div class="column is-10">
     <div class="content">
       <h1>Views</h1>
-      <p>TBA</p>
+      <p>
+        Hangar uses <a href="https://tera.netlify.com/docs/installation/" target="_blank">Tera</a> as its template engine.
+        <br>
+        The method to render a file is: <code>Template::render("path/to/file", &context)</code>.
+        <br>
+        <code>"path/to/file"</code> is a <code>html.tera</code> template file in <code>src/views/</code> folder.
+        <br>
+        <code>&context</code> is a reference to any type which implement <a href="https://docs.rs/serde/1.0.33/serde/trait.Serialize.html" target="_blank">Serde Serialize</a>.
+        <br>
+        An example of using template is like this:
+      </p>
+      <pre>
+src/controllers/example.rs
+
+use rocket_contrib::Template;
+
+#[get("/")]
+pub fn main() -> Template {
+    // Create a `context`. Here, just an empty `HashMap`.
+    let context = HashMap::new();
+    Template::render("pages/examples", &context)
+}
+      </pre>
+      <h2>ViewModel</h2>
+      <p>
+        Hangar have a <code>view_models/ViewModel</code> module which can be included to build view quickly.
+        <br>
+        The definition for <code>ViewModel</code> is like this:
+        <pre>
+#[derive(Debug, Serialize)]
+pub struct ViewModel<&zwj;H, B>
+where
+    H: Serialize,
+    B: Serialize,
+{
+    pub header: H,
+    pub body: B,
+    pub payload: Map<&zwj;String, Value>,
+}
+        </pre>
+      </p>
+      <p>
+        You can use <code>ViewModel</code> in an action.
+        <br>
+        It has 3 parts that you can use in the tera template: <code>header</code>, <code>body</code>, and <code>payload</code>
+        <br>
+      </p>
+      <h3>Inserting value in header or body</h3>
+      <p>
+        Since <code>header</code> and <code>body</code> is a generic which implements <code>Serialize</code>, you can replace it with any <code>struct</code> or anything else which implements <code>Serialize</code>.
+        <br>
+        Example on how to modify <code>header</code> or <code>body</code> for <code>ViewModel</code>:
+        <pre>
+// src/controllers/example.rs
+
+use rocket::response::Redirect;
+use rocket_contrib::Template;
+use view_models::*;
+
+// You probably should put this struct into a module for better app structure
+#[derive(Debug, Serialize)]
+struct TestView {
+    interesting_part: String,
+}
+
+#[get("/some_view")]
+pub fn some_view() -> Template {
+    let test_view = TestView {
+        interesting_part: String::from("ajep")
+    };
+    let mut context = ViewModel::new(DefaultHeader::default(), &test_view);
+    Template::render("some_view", &context)
+}
+
+// src/views/some_view.html.tera
+<&zwj;h1>{&zwj;{body.interesting_part}}<&zwj;/h1>
+        </pre>
+      </p>
+      <h3>Payload</h3>
+      <p>
+        There's another part of <code>ViewModel</code>, <code>payload</code>.
+        <br>
+        It's a <code>HashMap</code> which has <code>String</code> as it's key and has <code>serde_json::Value</code> as it's value. You can insert any Value type which is supported by <code>serde_json</code>: <a href="https://docs.serde.rs/serde_json/value/enum.Value.html" target="_blank">https://docs.serde.rs/serde_json/value/enum.Value.html</a>.
+        <br>
+        Example on how to use <code>payload</code>:
+        <pre>
+// src/controllers/example.rs
+
+use rocket::response::Redirect;
+use rocket_contrib::Template;
+use view_models::*;
+use serde_json::Value;
+
+#[get("/some_view")]
+pub fn some_view() -> Template {
+    let mut context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
+    context.payload.insert("key".to_string(), Value::Number(11.into()));
+    Template::render("some_view", &context)
+}
+
+// src/views/some_view.html.tera
+<&zwj;h1>{&zwj;{payload.key}}<&zwj;/h1>
+        </pre>
+      </p>
+      <h2>Base Layout</h2>
+      <p>
+        Hangar by default has one file as base layout for the template: <code>src/views/base_layout.html.tera</code>.
+        You can use the default layout by putting this in the view template:
+        <pre>
+{&zwj;% extends "base_layout" %}
+
+{&zwj;% block content %}
+  Insert some content here
+{&zwj;% endblock content %}
+        </pre>
+      </p>
+      <h2>Macro</h2>
+      <p>
+        You can put the template macros inside this file: <code>src/views/macros.html.tera</code>. It's imported by default on <code>src/views/base_layout.html.tera</code>.
+        <br>
+        It's currently include one macro: <code>asset_url</code>. You can use that macro as a shortcut for asset folder:
+        <br>
+        <code><&zwj;script src={&zwj;{macros::asset_url(filename="application.js")}}><&zwj;/script></code>.
+      </p>
+      <h2>Partial</h2>
+      <p>You can include other template like this: <code>{&zwj;% include "path/to_some_file" %}</code></p>
     </div>
   </div>
 </div>

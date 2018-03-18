@@ -32,6 +32,30 @@
         <li>
           <a href="/docs/10-middleware">Middleware</a>
         </li>
+        <li>
+          <a href="/docs/11-cookies">Cookies</a>
+        </li>
+        <li>
+          <a href="/docs/12-users">Users</a>
+        </li>
+        <li>
+          <a href="/docs/13-multipart-upload">Multipart Upload</a>
+        </li>
+        <li>
+          <a href="/docs/14-logging">Logging</a>
+        </li>
+        <li>
+          <a href="/docs/15-email">Email</a>
+        </li>
+        <li>
+          <a href="/docs/16-constants">Constants</a>
+        </li>
+        <li>
+          <a href="/docs/17-sanitizer">Sanitizer</a>
+        </li>
+        <li>
+          <a href="/docs/18-deploying">Deploying</a>
+        </li>
       </ul>
     </aside>
   </div>

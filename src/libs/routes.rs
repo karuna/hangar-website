@@ -43,5 +43,13 @@ fn doc_urls() -> Vec<Route> {
         docs_controller::_08,
         docs_controller::_09,
         docs_controller::_10,
+        docs_controller::_11,
+        docs_controller::_12,
+        docs_controller::_13,
+        docs_controller::_14,
+        docs_controller::_15,
+        docs_controller::_16,
+        docs_controller::_17,
+        docs_controller::_18,
     ]
 }

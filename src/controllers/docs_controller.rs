@@ -1,5 +1,6 @@
 use rocket::response::Redirect;
 use rocket_contrib::Template;
+
 use view_models::*;
 
 #[get("/")]
@@ -65,6 +66,54 @@ pub fn _09() -> Template {
 pub fn _10() -> Template {
     let context = default_view_model();
     Template::render("docs/10-middleware", &context)
+}
+
+#[get("/11-cookies")]
+pub fn _11() -> Template {
+    let context = default_view_model();
+    Template::render("docs/11-cookies", &context)
+}
+
+#[get("/12-users")]
+pub fn _12() -> Template {
+    let context = default_view_model();
+    Template::render("docs/12-users", &context)
+}
+
+#[get("/13-multipart-upload")]
+pub fn _13() -> Template {
+    let context = default_view_model();
+    Template::render("docs/13-multipart-upload", &context)
+}
+
+#[get("/14-logging")]
+pub fn _14() -> Template {
+    let context = default_view_model();
+    Template::render("docs/14-logging", &context)
+}
+
+#[get("/15-email")]
+pub fn _15() -> Template {
+    let context = default_view_model();
+    Template::render("docs/15-email", &context)
+}
+
+#[get("/16-constants")]
+pub fn _16() -> Template {
+    let context = default_view_model();
+    Template::render("docs/16-constants", &context)
+}
+
+#[get("/17-sanitizer")]
+pub fn _17() -> Template {
+    let context = default_view_model();
+    Template::render("docs/17-sanitizer", &context)
+}
+
+#[get("/18-deploying")]
+pub fn _18() -> Template {
+    let context = default_view_model();
+    Template::render("docs/18-deploying", &context)
 }
 
 fn default_view_model() -> ViewModel<DefaultHeader, DefaultBody> {
