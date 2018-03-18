@@ -31,9 +31,9 @@
       </ol>
       <h2>Run Behind a Reverse Proxy</h2>
       <p>
-        It's recommended that you run Hangar behind a reverse proxy such as <a href="https://www.nginx.com/" target="blank_">nginx</a>. It has better tooling as a web server. For example it has static cache, gzip support for files, and many more things.
+        It's recommended that you run Hangar behind a reverse proxy such as <a href="https://www.nginx.com/" target="blank_">Nginx</a>. It has better tooling as a web server. For example it has static cache, gzip support for files, and many more things.
         <br>
-        The steps would be the same, but run the Hangar on different port, for example port 8000. After that you can configure nginx like this:
+        The steps would be the same, but run the Hangar on different port, for example port 8000. After that you can configure Nginx like this:
         <pre>
 location / {
         # First attempt to serve request as file, then
@@ -61,7 +61,7 @@ ExecStart=/path/to/hangar/runner/folder/hangar_runner
 [Install]
 WantedBy=multi-user.target
         </pre>
-        Now you can start and enable the service automatically when it's booting. This is what this site is doing, running it as a systemd service behind nginx.
+        Now you can start and enable the service automatically when it's booting. This is what this site is doing, running it as a systemd service behind Nginx.
       </p>
 
     </div>

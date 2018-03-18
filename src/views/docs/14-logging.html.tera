@@ -6,7 +6,16 @@
   <div class="column is-10">
     <div class="content">
       <h1>Logging</h1>
-      <p>TBA</p>
+      <p>
+        Depending on the <a href="/docs/04-configurations">configuration</a>, Hangar will show each request in terminal or write to log file.
+        <br>
+        The format for the log is <a href="https://en.wikipedia.org/wiki/Common_Log_Format" target="_blank">Common Log Format</a>, commonly used by web servers such as Apache or Nginx.
+        <br><b>Currently (0.0.4) the response size is broken, it's only showing 0 for every response.</b>
+      </p>
+      <h2>TBA: Rocket managed logger</h2>
+      <p>
+        There's a plan to use the logger as a Rocket's managed object, so it can be used to write to terminal or file arbitrarily.
+      </p>
     </div>
   </div>
 </div>
