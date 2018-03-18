@@ -6,7 +6,37 @@
   <div class="column is-10">
     <div class="content">
       <h1>Email</h1>
-      <p>TBA</p>
+      <p>
+        People can use 3rd party service to send email, but Hangar comes with built in mailer using <a href="https://lettre.github.io/" target="_blank">lettre</a>.
+        <br>
+        If you want to use built in mailer, first you need to <a href="/docs/04-configurations">configure</a> the email. Afer that you can send it from actions or in models. Example:
+        <pre>
+use lettre::{EmailAddress, SimpleSendableEmail};
+use libs::email::{Mailer, MailerConfig};
+
+#[get("/email")]
+pub fn email(config: State<&zwj;MailerConfig>) -> Template {
+    let email = SimpleSendableEmail::new(
+        EmailAddress::new("user@localhost".to_string()),
+        vec![EmailAddress::new("root@localhost".to_string())],
+        Uuid::new_v4().to_string(),
+        "Hello world".to_string(),
+    );
+
+    let mailer_result = Mailer::new_from_config(&config.0);
+    let send_mail = if mailer_result.is_ok() {
+        mailer_result.unwrap().send_email(&email)
+    } else {
+        Err(String::from("Cannot send email"))
+    };
+    let body = DefaultBody {
+        content: send_mail.unwrap(),
+    };
+    let context = ViewModel::new(DefaultHeader::default(), &body);
+    Template::render("pages/index", &context)
+}
+        </pre>
+      </p>
     </div>
   </div>
 </div>

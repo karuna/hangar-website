@@ -6,7 +6,11 @@
   <div class="column is-10">
     <div class="content">
       <h1>Constants</h1>
-      <p>TBA</p>
+      <p>
+        Hangar project put constants in <code>src/libs/lib_const.rs</code>.
+        <br>
+        Besides putting your constants, it might be good to put static variables here. You can use <a href="https://crates.io/crates/lazy_static" target="_blank">lazy_static</a> to lazily create static variables.
+      </p>
     </div>
   </div>
 </div>

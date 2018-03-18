@@ -1,0 +1,70 @@
+{% extends "base_layout" %}
+
+{% block content %}
+<div class="columns">
+  {% include "partials/side_menu" %}
+  <div class="column is-10">
+    <div class="content">
+      <h1>Deploying</h1>
+      <p>Hangar can be deployed directly on port 80 by this steps:</p>
+      <ol>
+        <li>
+          Compile the release binary: <code>cargo build --release</code>
+        </li>
+        <li>
+          If you don't modify the <code>Cargo.toml</code>, the output filename will be<code>target/release/hangar_runner</code>. We will call this file runner.
+        </li>
+        <li>
+          Suggestion: copy the file to some work folder for easy access
+        </li>
+        <li>
+          On the same folder as runner, configure the <code>Rocket.toml</code>.
+          <br>
+          You can also set <code>assets_dir</code> and <code>file_logger_dir_path</code> on the same folder.
+        </li>
+        <li>
+          Copy the required file: <code>.env</code> file, the whole <code>assets</code> and <code>views</code> folder and its content to the path you have configure on previous step. You might want to create file log folder too if necessary.
+        </li>
+        <li>
+          Run the application: <code>./hangar_runner</code>. If it compiles and running, usually it's working. You just need to modify the <code>Rocket.toml</code>.
+        </li>
+      </ol>
+      <h2>Run Behind a Reverse Proxy</h2>
+      <p>
+        It's recommended that you run Hangar behind a reverse proxy such as <a href="https://www.nginx.com/" target="blank_">nginx</a>. It has better tooling as a web server. For example it has static cache, gzip support for files, and many more things.
+        <br>
+        The steps would be the same, but run the Hangar on different port, for example port 8000. After that you can configure nginx like this:
+        <pre>
+location / {
+        # First attempt to serve request as file, then
+        # as directory, then fall back to displaying a 404.
+        proxy_pass http://localhost:8000;
+}
+        </pre>
+      </p>
+      <h2>Run as Service</h2>
+      <p>
+        You can set Hangar application as a service. For example you can run it from <a href="http://supervisord.org/"target="blank_">Supervisord</a> or from your system init.
+        <br>
+        For example you can make a systemd unit file on <code>/etc/systemd/system/hangar.service</code>:
+        <pre>
+[Unit]
+Description=Hangar Application
+
+[Service]
+User=user
+Group=group
+WorkingDirectory=/path/to/hangar/runner/folder
+Environment="ROCKET_ENV=production"
+ExecStart=/path/to/hangar/runner/folder/hangar_runner
+
+[Install]
+WantedBy=multi-user.target
+        </pre>
+        Now you can start and enable the service automatically when it's booting. This is what this site is doing, running it as a systemd service behind nginx.
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -54,7 +54,13 @@
           <a href="/docs/17-sanitizer">Sanitizer</a>
         </li>
         <li>
-          <a href="/docs/18-deploying">Deploying</a>
+          <a href="/docs/18-error-handling">Error Handling</a>
+        </li>
+        <li>
+          <a href="/docs/19-assets">Assets</a>
+        </li>
+        <li>
+          <a href="/docs/20-deploying">Deploying</a>
         </li>
       </ul>
     </aside>

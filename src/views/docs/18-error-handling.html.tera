@@ -1,0 +1,24 @@
+{% extends "base_layout" %}
+
+{% block content %}
+<div class="columns">
+  {% include "partials/side_menu" %}
+  <div class="column is-10">
+    <div class="content">
+      <h1>Error Handling</h1>
+      <p>
+        Right now error handling is provided by default for various type of errors. Errors in action should be handled automatically inside <code>src/handlers.rs</code> file.
+        <br>
+        You can modify errors in the catcher functions, for example:
+        <pre>
+#[catch(400)]
+fn bad_request_handler() -> APIResponse {
+    bad_request()
+}
+        </pre>
+        Unfortunately due to upstream does not support it yet, there's only one handler for every mime-type. It will be updated in the future if the upstream already support it.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -110,10 +110,22 @@ pub fn _17() -> Template {
     Template::render("docs/17-sanitizer", &context)
 }
 
-#[get("/18-deploying")]
+#[get("/18-error-handling")]
 pub fn _18() -> Template {
     let context = default_view_model();
-    Template::render("docs/18-deploying", &context)
+    Template::render("docs/18-error-handling", &context)
+}
+
+#[get("/19-assets")]
+pub fn _19() -> Template {
+    let context = default_view_model();
+    Template::render("docs/19-assets", &context)
+}
+
+#[get("/20-deploying")]
+pub fn _20() -> Template {
+    let context = default_view_model();
+    Template::render("docs/20-deploying", &context)
 }
 
 fn default_view_model() -> ViewModel<DefaultHeader, DefaultBody> {

@@ -1,0 +1,40 @@
+{% extends "base_layout" %}
+
+{% block content %}
+<div class="columns">
+  {% include "partials/side_menu" %}
+  <div class="column is-10">
+    <div class="content">
+      <h1>Assets</h1>
+      <p>
+        If you <a href="/docs/04-configurations">configure</a> Hangar to serve assets, then you can put asset files  inside the assets folder. It's mapped to subfolder, so you can just put <code>folder/image.jpg</code> inside the assets folder and you can access it from <code><&zwj;img src="/assets/folder/image.jpg" /></code>.
+      </p>
+      <h2>Assets Macro</h2>
+      <p>
+        If you don't remove the macro from base layout, then you can use <code>asset_url</code> macro like this:
+        <pre>
+<&zwj;script src={&zwj;{macros::asset_url(filename="application.js")}}><&zwj;/script>
+        </pre>
+      </p>
+      <h2>Assets Compilation</h2>
+      <p>
+        Right now this feature is still being developed, but currently we are using <a href="https://parceljs.org/" target="_blank">Parcel Bundler</a>.
+        <br>
+        We have 2 files in <code>client/assets</code> folder: <code>application.js</code> and <code>application.css</code> as the starting point. To run parcel watcher while developing, you can use <a href="https://yarnpkg.com/" target="_blank">Yarn</a> to install parcel and run these commands in 2 terminals:
+        <pre>
+          yarn install
+          yarn run start-js
+          yarn run start-css
+        </pre>
+        It will precompile assets to <code>src/assets</code> folder.
+      </p>
+      <h2>Webassembly</h2>
+      <p>
+        Right now the <code>package.json</code> file already include <code>parcel-plugin-cargo-web</code> plugin, so it should be able to compile Rust webassembly project directly.
+        <br>
+        More details is TBA.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock content %}
