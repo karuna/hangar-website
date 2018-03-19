@@ -6,7 +6,34 @@
   <div class="column is-10">
     <div class="content">
       <h1>Users</h1>
-      <p>TBA</p>
+      <p>
+        Hangar has built in user model with commonly used table columns: <code>id</code>, <code>email</code>,<code>encrypted_password</code>, <code>created_at</code>, <code>updated_at</code>, <code>access_token</code>, and <code>last_access</code>.
+        <br>
+        The algorithm for encrypting user password is <a href="https://en.wikipedia.org/wiki/Argon2" target="_blank">Argon2 Algorithm</a>, so it's very secure.
+      </p>
+      <h2>Login, Logout, Signin, Signup</h2>
+      <p>
+        Hangar has built in pages for user information, login, logout, signin, and signup in: <code>/users/<&zwj;id></code>, <code>/users/login</code>, <code>/users/logout</code>, <code>/users/sigin</code>, <code>/users/signup</code>.
+        <br>
+        It might be a security problem if you don't need it, so you can remove the actions and view files from <code>src/libs/routes.rs</code>, <code>src/controllers/users_controller.rs</code> and <code>src/views/users</code>.
+      </p>
+      <h2>CurrentUser</h2>
+      <p>
+        Hangar also has built in <code>CurrentUser</code> guard, so you can use it in actions. Example:
+        <pre>
+use guards::user::CurrentUser;
+
+#[get("/ok", format = "text/html")]
+pub fn ok_with_user(current_user: CurrentUser) -> &'static str {
+  "There is a CurrentUser"
+}
+
+#[get("/ok", format = "text/html")]
+pub fn ok_no_user() -> &'static str {
+  "There is no CurrentUser"
+}
+        </pre>
+      </p>
     </div>
   </div>
 </div>
