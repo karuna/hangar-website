@@ -6,7 +6,65 @@
   <div class="column is-10">
     <div class="content">
       <h1>Multipart Upload</h1>
-      <p>TBA</p>
+      <p>
+        Hangar uses <a href="https://crates.io/crates/multipart">multipart</a> crates to handle file upload.
+        <br>
+        You can see an example of uploading multipart form like this:
+        <pre>
+use rocket::Data;
+use rocket::http::ContentType;
+use multipart::server::Multipart;
+use multipart::server::save::SaveResult::*;
+
+#[post("/upload", data = "<&zwj;data>")]
+pub fn upload(cont_type: &ContentType, data: Data) -> Result<&zwj;Template, Template> {
+
+    if !cont_type.is_form_data() {
+        let body = json!({
+            "content": "Not a valid upload content",
+        });
+        let context = ViewModel::new(DefaultHeader::default(), &body.0);
+        return Err(Template::render("pages/index", &context));
+    }
+
+    let (_, boundary) = cont_type
+        .params()
+        .find(|&(k, _)| k == "boundary")
+        .ok_or_else(|| {
+            let body = json!({
+                "content": "Not a valid upload content",
+            });
+            let context = ViewModel::new(DefaultHeader::default(), &body.0);
+            Template::render("pages/index", &context)
+        })?;
+
+    match process_upload(boundary, data) {
+        Ok(_resp) => println!("Ok"),
+        Err(_err) => println!("Err"),
+    }
+
+    let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
+    Ok(Template::render("pages/index", &context))
+}
+
+fn process_upload(boundary: &str, data: Data) -> Result<&zwj;String, String> {
+    Multipart::with_body(data.open(), boundary).foreach_entry(|mut entry|{
+        let part = entry.data.save().size_limit(None).temp();
+        match part {
+            Full(full_part) => println!("{:?}", full_part),
+            Partial(partial, reason) => {
+                println!("Request partially processed: {:?}", reason);
+                println!("{:?}", partial);
+            },
+            Error(e) => println!("{:?}", e),
+        }
+
+    });
+
+    Ok(String::from("abc"))
+}
+        </pre>
+      </p>
     </div>
   </div>
 </div>
