@@ -17,8 +17,7 @@ use multipart::server::Multipart;
 use multipart::server::save::SaveResult::*;
 
 #[post("/upload", data = "<&zwj;data>")]
-pub fn upload(cont_type: &ContentType, data: Data) -> Result<&zwj;Template, Template> {
-
+pub fn upload(cont_type: &ContentType, data: Data) -> Result<Template, Template> {
     if !cont_type.is_form_data() {
         let body = json!({
             "content": "Not a valid upload content",
@@ -38,20 +37,26 @@ pub fn upload(cont_type: &ContentType, data: Data) -> Result<&zwj;Template, Temp
             Template::render("pages/index", &context)
         })?;
 
-    match process_upload(boundary, data) {
-        Ok(_resp) => println!("Ok"),
-        Err(_err) => println!("Err"),
+    let uploaded = process_upload(boundary, data);
+    if uploaded.is_err() {
+        let err = uploaded.unwrap();
+        println!("Err");
+    } else {
+        let result = uploaded.unwrap();
+        println!("Ok");
     }
 
     let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
     Ok(Template::render("pages/index", &context))
 }
 
-fn process_upload(boundary: &str, data: Data) -> Result<&zwj;String, String> {
+fn process_upload(boundary: &str, data: Data) -> Result<String, String> {
     Multipart::with_body(data.open(), boundary).foreach_entry(|mut entry|{
         let part = entry.data.save().size_limit(None).temp();
         match part {
-            Full(full_part) => println!("{:?}", full_part),
+            Full(full_part) => {
+                println!("Full part {:?}", full_part)
+            },
             Partial(partial, reason) => {
                 println!("Request partially processed: {:?}", reason);
                 println!("{:?}", partial);
@@ -61,7 +66,7 @@ fn process_upload(boundary: &str, data: Data) -> Result<&zwj;String, String> {
 
     });
 
-    Ok(String::from("abc"))
+    Ok(String::from("Success"))
 }
         </pre>
       </p>
