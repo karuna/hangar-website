@@ -55,9 +55,11 @@ fn process_upload(boundary: &str, data: Data) -> Result<String, String> {
         let part = entry.data.save().size_limit(None).temp();
         match part {
             Full(full_part) => {
+                // do something with full part
                 println!("Full part {:?}", full_part)
             },
             Partial(partial, reason) => {
+                // do something with partial part
                 println!("Request partially processed: {:?}", reason);
                 println!("{:?}", partial);
             },

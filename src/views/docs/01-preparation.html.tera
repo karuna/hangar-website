@@ -11,9 +11,10 @@
         <a href="https://www.rust-lang.org" target="_blank">The Rust Programming Language</a>
         is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.
         <br>
+        Before you can use Hangar framework, it's better if you learn more about Rust Programming Language.
         You can learn more about Rust Programming Language by reading
         <a href="https://doc.rust-lang.org/book/" target="_blank">The Rust Programming Language Book</a>
-        and practice by doing <a href="https://rustbyexample.com/" target="_blank">Rust By Example</a>.
+        and practice by completing examples on <a href="https://rustbyexample.com/" target="_blank">Rust By Example</a>.
       </p>
       <p>
         There are many ways to get help, for example by joining

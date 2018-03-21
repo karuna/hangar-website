@@ -6,7 +6,11 @@
   <div class="column is-10">
     <div class="content">
       <h1>Middleware</h1>
-      <p>TBA</p>
+      <p>
+        You can put <a href="https://rocket.rs/guide/fairings/" target="_blank">middlewares in Rocket</a>. In hangar the convention is to use <code>src/libs/init.rs</code>.
+        <br>
+        By default Hangar already includes middleware to lowercase the request, log the request, and use Tera template.
+      </p>
     </div>
   </div>
 </div>

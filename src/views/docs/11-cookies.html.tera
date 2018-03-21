@@ -6,7 +6,35 @@
   <div class="column is-10">
     <div class="content">
       <h1>Cookies</h1>
-      <p>TBA</p>
+      <p>
+        Cookie is <a href="https://rocket.rs/guide/requests/#cookies" target="_blank">builtin in Rocket</a>, so we can just use it as usual. For example adding and getting cookie:
+        <pre>
+use rocket::http::{Cookie, Cookies};
+
+#[get("/set_cookie")]
+fn set_cookie(cookies: Cookies) -> &'static str {
+    cookies.add(Cookie::new("key", "value"));
+    "Ok"
+}
+
+#[get("/get_cookie")]
+fn get_cookie(cookies: Cookies) -> Option<String> {
+    cookies.get("key").map(|c| format!("Cookie: {}", c.value()))
+}
+
+#[get("/set_private_cookie")]
+fn set_private_cookie(cookies: Cookies) -> &'static str {
+    cookies.add_private(Cookie::new("key", "value"));
+    "Ok"
+}
+
+#[get("/get_private_cookie")]
+fn get_private_cookie(cookies: Cookies) -> Option<String> {
+    cookies.get_private("key").map(|c| format!("Cookie: {}", c.value()))
+}
+        </pre>
+        You can use the private cookie methods for secure content you want to put in client side. For example if you want to set <code>user_id</code> or <code>access_token</code>.
+      </p>
     </div>
   </div>
 </div>

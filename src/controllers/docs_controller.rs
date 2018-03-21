@@ -5,13 +5,13 @@ use view_models::*;
 
 #[get("/")]
 pub fn main() -> Redirect {
-    Redirect::to("/docs/01-what_you_need_to_prepare")
+    Redirect::to("/docs/01-preparation")
 }
 
-#[get("/01-what_you_need_to_prepare")]
+#[get("/01-preparation")]
 pub fn _01() -> Template {
     let context = default_view_model();
-    Template::render("docs/01-what_you_need_to_prepare", &context)
+    Template::render("docs/01-preparation", &context)
 }
 
 #[get("/02-cli")]

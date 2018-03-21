@@ -6,7 +6,346 @@
   <div class="column is-10">
     <div class="content">
       <h1>Models</h1>
-      <p>TBA</p>
+      <p>
+        Hangar uses <a href="https://diesel.rs" target="_blank">Diesel ORM</a> for doing SQL queries and transforming SQL objects into Rust objects.
+        <br>
+        For database connection pool, Hangar uses <a href="https://github.com/sfackler/r2d2" target="_blank">R2D2 crates</a>.
+      </p>
+      <h2>Database Connection Configuration</h2>
+      <p>
+        When generating the application skeleton using Hangar CLI, you can <a href="/docs/02-cli">setup the main database connection</a>. But if you want to modify database url later, you can edit <code>.env</code> and <code>Rocket.toml</code> file.
+        <br>
+        You also need to modify the <code>DbConnection</code> type on <code>src/libs/db.rs</code> to either <code>use diesel::sqlite::SqliteConnection</code>, <code>diesel::mysql::MysqlConnection</code>, or <code>diesel::pg::PgConnection</code> depending on what you use.
+      </p>
+      <h2>Model file</h2>
+      <p>
+        Hangar uses <code>model</code> concept for structuring data which will be returned to client or inserted into database. These is the step by step on how to implement model:
+      </p>
+      <ol>
+        <li>
+          Start by creating new tables. You can see how to create a migration file, running the migration, and print the schema on <a href="docs/02-cli">previous part</a>. For example we want to create a post model. Let's create a migration and make it like this:
+          <pre>
+-- up.sql
+-- Your SQL goes here
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) UNIQUE NOT NULL,
+  body TEXT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE UNIQUE INDEX title_idx ON posts(title);
+CREATE INDEX user_id_idx ON posts(user_id);
+
+-- down.sql
+DROP TABLE posts;
+          </pre>
+        </li>
+        <li>
+          After you print the schema you can make a model file in <code>src/models/post.rs</code>:
+          <pre>
+use chrono::NaiveDateTime;
+use diesel::prelude::*;
+
+use models::user::User;
+use schema::posts;
+
+#[derive(Debug, Serialize, Deserialize, Queryable, Identifiable, Associations, AsChangeset)]
+#[belongs_to(User)]
+#[table_name = "posts"]
+pub struct Post {
+    pub id: i32,
+    pub title: String,
+    pub body: Option<String>,
+    pub user_id: i32,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
+}
+          </pre>
+          If you take a look at the file, it contains <code>use schema::posts;</code>. That's because Diesel provides macro inside <code>src/schema.rs</code> which we can use.
+          <br>
+          The derive macro <code>Serialize</code> and <code>Deserialize</code> is from <a href="https://serde.rs" target="_blank">serde</a>. Using that derive macro we can easily convert the <code>struct</code> into json and vice versa quickly.
+          <br>
+          The other derive macro is from Diesel, you can search for <code>Deserialize, Queryable, Identifiable, Associations, AsChangeset</code> in their documentation: <a href="http://docs.diesel.rs/diesel/">http://docs.diesel.rs/diesel/</a>.
+        </li>
+        <li>
+          You can implement <a href="https://doc.rust-lang.org/std/default/trait.Default.html">Default</a> trait if you prefer:
+          <pre>
+use chrono::{Local, NaiveDateTime};
+...
+impl Default for Post {
+    fn default() -> Post {
+        let local_time = Local::now().naive_local();
+        Post {
+            id: Default::default(),
+            title: Default::default(),
+            body: Default::default(),
+            user_id: Default::default(),
+            created_at: local_time,
+            updated_at: local_time,
+        }
+    }
+}
+          </pre>
+        </li>
+        <li>
+          To create new post, you can create new <code>struct</code>:
+          <pre>
+use validator::Validate;
+...
+#[derive(Validate, Insertable, Serialize)]
+#[table_name = "posts"]
+pub struct NewPost<&zwj;'a> {
+    pub user_id: i32,
+    #[validate(length(min = "1"))]
+    pub title: String,
+    pub body: Option<&zwj;&'a String>,
+}
+          </pre>
+          We are creating a struct which has only inserted columns. Also we are using <a href="https://docs.rs/validator/" target="_blank">https://docs.rs/validator/</a> crates to validate the content of the structure. It's already included in the <code>Cargo.toml</code> so you don't need to add that.
+        </li>
+        <li>
+          Also since we are going to insert the data from html form, we need a way to convert the form data to <code>NewPost</code>.
+          <pre>
+#[derive(FromForm, Serialize)]
+pub struct PostFromParam {
+    pub title: String,
+    pub body: Option<String>,
+}
+
+impl PostFromParam {
+    pub fn to_new_post(&self, user_id: i32) -> NewPost {
+        NewPost {
+            user_id: user_id,
+            title: self.title.clone(),
+            body: self.body.as_ref(),
+        }
+    }
+}
+          </pre>
+          The <code>FromForm</code> derive macro will automatically change form data into <code>PostFromParam</code> guard.
+          <br>
+          We can use <code>PostFromParam</code> in the action directly as request guard, and then we can add <code>user_id</code> from <code>CurrentUser</code>. User will not be able to inject <code>user_id</code> in the parameters.
+        </li>
+        <li>
+          Also we might need an array of <code>Post</code>. So let's make it.
+          <pre>
+#[derive(Debug, Serialize)]
+pub struct Posts {
+    pub posts: Vec<Post>,
+}
+          </pre>
+        </li>
+        <li>
+          Last, don't forget to add that file to models module <code>src/models/mod.rs</code>:
+          <pre>
+...
+pub mod post;
+...
+          </pre>
+        </li>
+      </ol>
+      <h2>Query, Insert, Update, Delete record</h2>
+      <h3>Query</h3>
+      <p>
+        Let's start by querying post records. We use <code>ConnPool</code>, a state which is managed by Rocket when we start the application.
+        <pre>
+use rocket_contrib::Template;
+
+use libs::db::ConnPool;
+use models::post::Post;
+use view_models::*;
+use schema::posts;
+
+#[get("/", format = "text/html")]
+pub fn index(db: ConnPool) -> Template {
+    let posts_query = posts::dsl::posts.load::<&zwj;Post>(&**db).optional();
+    let posts_list = posts_query.unwrap();
+        let header = DefaultHeader {
+        title: String::from("Posts"),
+    };
+    let context = ViewModel::new(&header, &posts_list);
+    Template::render("posts/index", &context)
+}
+        </pre>
+      </p>
+      <p>
+        Now that we know how to get a list, let's make a function for a single id.
+        <pre>
+use rocket::response::{Flash, Redirect};
+...
+#[get("/<&zwj;id>", format = "text/html")]
+pub fn show(id: i32, db: ConnPool) -> Result<&zwj;Template, Flash<&zwj;Redirect>> {
+    let post_query = posts::dsl::posts.find(&id).first::<&zwj;Post>(&**db).optional();
+
+    if let Ok(Some(post)) = post_query {
+        let header = DefaultHeader {
+            title: String::from("Post"),
+        };
+        let context = ViewModel::new(&header, &post);
+        Ok(Template::render("posts/show", &context))
+    } else {
+        Err(Flash::error(Redirect::to("/posts"), "404"))
+    }
+}
+        </pre>
+      </p>
+      <h3>Inserting record</h3>
+      <p>
+        Let's continue with inserting. We are getting the parameters <code>PostFromParam</code>, and converting it to <code>NewPost</code>. After we validate, we insert into the database.
+        <pre>
+use std::default::Default;
+
+use diesel;
+use diesel::prelude::*;
+use diesel::result::Error;
+use validator::Validate;
+
+use rocket::request::LenientForm;
+use guards::user::CurrentUser;
+use models::post::{Post, PostFromParam};
+...
+#[post("/", data = "<&zwj;post_param>", format = "application/x-www-form-urlencoded")]
+pub fn create(
+    post_param: LenientForm<&zwj;PostFromParam>,
+    current_user: CurrentUser,
+    db: ConnPool,
+) -> Result<&zwj;Flash<&zwj;Redirect>, Template> {
+    let new_post_from_param = post_param.into_inner();
+    let user_id = current_user.id();
+    let new_post = new_post_from_param.to_new_post(user_id);
+    if new_post.validate().is_err() {
+        return Err(render_new_post(current_user, Some(&new_post_from_param)));
+    }
+    let result = diesel::insert_into(posts::table)
+        .values(&new_post)
+        .get_result::<&zwj;Post>(&**db);
+    if let Err(Error::DatabaseError(_err, _)) = result {
+        return Err(render_new_post(current_user, Some(&new_post_from_param)));
+    }
+    Ok(Flash::success(
+        Redirect::to("/posts"),
+        "Successfully created post.",
+    ))
+}
+
+fn render_new_post(user: CurrentUser, post: Option<&zwj;&PostFromParam>) -> Template {
+    let header = DefaultHeader {
+        title: String::from("New Post"),
+    };
+    if post.is_some() {
+        let new_post = post.unwrap();
+        let context = ViewModel::new(&header, &new_post);
+        Template::render("posts/new", &context)
+    } else {
+        let new_post = Post {
+            user_id: user.id(),
+            ..Default::default()
+        };
+        let context = ViewModel::new(&header, &new_post);
+        Template::render("posts/new", &context)
+    }
+}
+        </pre>
+      </p>
+      <h3>Updating</h3>
+      <p>
+        After inserting, let's do the updating. First we are getting the parameters <code>PostFromParam</code>, after that we query the existing record and check the user and assign the changes and update the record.
+        <pre>
+use std::default::Default;
+
+use diesel;
+use diesel::prelude::*;
+use diesel::result::Error;
+use validator::Validate;
+
+use rocket::request::LenientForm;
+use rocket::response::{Flash, Redirect};
+use rocket_contrib::Template;
+
+use guards::user::CurrentUser;
+use libs::db::ConnPool;
+use models::post::{Post, PostFromParam};
+use view_models::*;
+use schema::posts;
+
+
+#[post("/<&zwj;id>", data = "<&zwj;post_param>", format = "application/x-www-form-urlencoded")]
+pub fn update(
+    id: i32,
+    post_param: LenientForm<&zwj;PostFromParam>,
+    current_user: CurrentUser,
+    db: ConnPool,
+) -> Result<&zwj;Flash<&zwj;Redirect>, Template> {
+    let post_from_param = post_param.into_inner();
+    let user_id = current_user.id();
+    let post_query = posts::dsl::posts.find(&id).first::<&zwj;Post>(&**db).optional();
+    if let Ok(Some(mut post)) = post_query {
+        if user_id != post.user_id {
+            return Ok(Flash::error(Redirect::to("/posts"), "Not authorized."));
+        }
+        post.title = post_from_param.title;
+        post.body = post_from_param.body;
+        let command = diesel::update(&post).set(&post);
+        let result = command.get_result::<&zwj;Post>(&**db).optional();
+        if let Err(Error::DatabaseError(_err, _)) = result {
+            return Err(render_edit_post(&post));
+        }
+
+        Ok(Flash::success(
+            Redirect::to("/posts"),
+            "Successfully created post",
+        ))
+    } else {
+        return Ok(Flash::error(Redirect::to("/posts"), "Not authorized."));
+    }
+}
+
+fn render_edit_post(post: &Post) -> Template {
+    let header = DefaultHeader {
+        title: String::from("Edit Post"),
+    };
+    let context = ViewModel::new(&header, &post);
+    Template::render("posts/edit", &context)
+}
+        </pre>
+      </p>
+      <h3>Deleting Record</h3>
+      <p>
+        This one is more straightforward. We find the record and then delte the record.
+        <pre>
+#[get("/<&zwj;id>/delete", format = "text/html")]
+pub fn delete(
+    id: i32,
+    _current_user: CurrentUser,
+    db: ConnPool,
+) -> Result<Flash<Redirect>, Flash<Redirect>> {
+    let delete_query = posts::dsl::posts
+        .find(&id)
+        .select(posts::id)
+        .first::<&zwj;i32>(&**db)
+        .optional();
+    if let Ok(Some(_)) = delete_query {
+        let result = diesel::delete(posts::dsl::posts.filter(posts::id.eq(&id)))
+            .execute(&**db)
+            .optional();
+        if let Err(Error::DatabaseError(_err, _)) = result {
+            return Ok(redirect_delete("Something went wrong."));
+        }
+        return Ok(redirect_delete("Successfully deleting post."));
+    } else {
+        return Ok(redirect_delete("Cannot find post."));
+    }
+}
+
+fn redirect_delete(reason: &str) -> Flash<Redirect> {
+    Flash::error(Redirect::to("/posts"), reason)
+}
+
+        </pre>
+      </p>
     </div>
   </div>
 </div>
