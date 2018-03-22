@@ -12,7 +12,7 @@
         <br>
         It's build with speed, security, and web developer's usability in mind.
       </h2>
-      <p>
+      <!--p>
         Benchmark comparison. First is non Hangar framework, 5 threads worker & 5 connection pool querying 2 records
       </p>
       <pre>ab -n 10000 -c 100 http://0.0.0.0:3000/posts
@@ -70,7 +70,7 @@ Percentage of the requests served within a certain time (ms)
   98%   1708
   99%   1728
  100%   1815 (longest request)
-      </pre>
+      </pre-->
     </div>
   </section>
   <section class="section">
