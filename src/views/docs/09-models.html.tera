@@ -346,6 +346,566 @@ fn redirect_delete(reason: &str) -> Flash<Redirect> {
 
         </pre>
       </p>
+      <h3>Data Type</h3>
+      <p>
+        Serde for serialization, and Diesel as ORM has its own Data Type.
+      </p>
+      <ul>
+        <li>
+          You can see the Data Type support for serde here: <a href="https://serde.rs/data-model.html" target="_blank">https://serde.rs/data-model.html</a>.
+        </li>
+        <li>
+          For Diesel MySQL, you can see the list here: <a href="http://docs.diesel.rs/diesel/mysql/enum.MysqlType.html" target="_blank">http://docs.diesel.rs/diesel/mysql/enum.MysqlType.html</a> and <a href="http://docs.diesel.rs/diesel/mysql/types/index.html" target="_blank">http://docs.diesel.rs/diesel/mysql/types/index.html</a>.
+        </li>
+        <li>SQLite types: <a href="http://docs.diesel.rs/diesel/sqlite/enum.SqliteType.html" target="_blank">http://docs.diesel.rs/diesel/sqlite/enum.SqliteType.html</a></li>
+      </ul>
+      <p>
+        For PostgreSQL, the following is copied from <a href="https://kotiri.com/2018/01/31/postgresql-diesel-rust-types.html" target="_blank">https://kotiri.com/2018/01/31/postgresql-diesel-rust-types.html</a> with license <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/nz/" target="_blank">as CC BY-NC-SA.</a>
+      </p>
+      <div id="types">
+        <table>
+          <thead>
+            <tr>
+              <th>PostgreSQL Type</th>
+              <th>PostgreSQL Size</th>
+              <th>Description</th>
+              <th>Range</th>
+              <th>Diesel Type</th>
+              <th>Rust Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nullable Types</td>
+              <td>&nbsp;</td>
+              <td>nullable</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Nullable.html"><code class="highlighter-rouge">Nullable</code></a><code class="highlighter-rouge">&lt;T&gt;</code></td>
+              <td><a href="https://doc.rust-lang.org/std/option/enum.Option.html"><code class="highlighter-rouge">Option</code></a><code class="highlighter-rouge">&lt;T&gt;</code></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-numeric.html">Numeric Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">smallint</code>, <code class="highlighter-rouge">int2</code></td>
+              <td>2 bytes</td>
+              <td>signed integer</td>
+              <td>-32768 to +32767</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.SmallInt.html"><code class="highlighter-rouge">SmallInt</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.i16.html"><code class="highlighter-rouge">i16</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">integer</code>, <code class="highlighter-rouge">int</code>, <code class="highlighter-rouge">int4</code></td>
+              <td>4 bytes</td>
+              <td>signed integer</td>
+              <td>-2147483648 to +2147483647</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Integer.html"><code class="highlighter-rouge">Integer</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.i32.html"><code class="highlighter-rouge">i32</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">bigint</code>, <code class="highlighter-rouge">int8</code></td>
+              <td>8 bytes</td>
+              <td>signed integer</td>
+              <td>-9223372036854775808 to +9223372036854775807</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.BigInt.html"><code class="highlighter-rouge">BigInt</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.i64.html"><code class="highlighter-rouge">i64</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">numeric(p, s)</code>, <code class="highlighter-rouge">decimal(p, s)</code></td>
+              <td>2 bytes per 4 digits + 3 to 8 bytes</td>
+              <td>exact numeric of selectable precision</td>
+              <td>131072.16383 digits</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Numeric.html"><code class="highlighter-rouge">Numeric</code></a></td>
+              <td><a href="http://docs.diesel.rs/bigdecimal/struct.BigDecimal.html"><code class="highlighter-rouge">bigdecimal::BigDecimal</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">real</code>, <code class="highlighter-rouge">float4</code></td>
+              <td>4 bytes</td>
+              <td>single precision floating-point number</td>
+              <td>6 digits precision</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Float.html"><code class="highlighter-rouge">Float</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.f32.html"><code class="highlighter-rouge">f32</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">double precision</code>, <code class="highlighter-rouge">float8</code></td>
+              <td>8 bytes</td>
+              <td>double precision floating-point number</td>
+              <td>15 digits precision</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Double.html"><code class="highlighter-rouge">Double</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.f64.html"><code class="highlighter-rouge">f64</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">smallserial</code>, <code class="highlighter-rouge">serial2</code></td>
+              <td>2 bytes</td>
+              <td>autoincrementing integer</td>
+              <td>1 to 32767</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.SmallInt.html"><code class="highlighter-rouge">SmallInt</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.i16.html"><code class="highlighter-rouge">i16</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">serial</code>, <code class="highlighter-rouge">serial4</code></td>
+              <td>4 bytes</td>
+              <td>autoincrementing integer</td>
+              <td>1 to 2147483647</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Integer.html"><code class="highlighter-rouge">Integer</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.i32.html"><code class="highlighter-rouge">i32</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">bigserial</code>, <code class="highlighter-rouge">serial8</code></td>
+              <td>8 bytes</td>
+              <td>autoincrementing integer</td>
+              <td>1 to 9223372036854775807</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.BigInt.html"><code class="highlighter-rouge">BigInt</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.i64.html"><code class="highlighter-rouge">i64</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-money.html">Monetary Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">money</code></td>
+              <td>8 bytes</td>
+              <td>currency amount</td>
+              <td>-92233720368547758.08 to +92233720368547758.07</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Money.html"><code class="highlighter-rouge">Money</code></a></td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/data_types/struct.Cents.html"><code class="highlighter-rouge">Cents</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-character.html">Character Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">character varying(n)</code>, <code class="highlighter-rouge">varchar(n)</code></td>
+              <td>n+1 or n+4 bytes</td>
+              <td>variable-length character string</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Text.html"><code class="highlighter-rouge">Text</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/string/struct.String.html"><code class="highlighter-rouge">String</code></a>, <code class="highlighter-rouge">&amp;</code><a href="https://doc.rust-lang.org/std/primitive.str.html"><code class="highlighter-rouge">str</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">character(n)</code>, <code class="highlighter-rouge">char(n)</code></td>
+              <td>n+1 or n+4 bytes</td>
+              <td>fixed-length character string</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Text.html"><code class="highlighter-rouge">Text</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/string/struct.String.html"><code class="highlighter-rouge">String</code></a>, <code class="highlighter-rouge">&amp;</code><a href="https://doc.rust-lang.org/std/primitive.str.html"><code class="highlighter-rouge">str</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">text </code></td>
+              <td>n+1 or n+4 bytes</td>
+              <td>variable-length character string</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Text.html"><code class="highlighter-rouge">Text</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/string/struct.String.html"><code class="highlighter-rouge">String</code></a>, <code class="highlighter-rouge">&amp;</code><a href="https://doc.rust-lang.org/std/primitive.str.html"><code class="highlighter-rouge">str</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-binary.html">Binary Data Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">bytea</code></td>
+              <td>n+1 to n+4 bytes</td>
+              <td>binary data (“byte array”)</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Binary.html"><code class="highlighter-rouge">Binary</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/vec/struct.Vec.html"><code class="highlighter-rouge">Vec</code></a><code class="highlighter-rouge">&lt;</code><a href="https://doc.rust-lang.org/std/primitive.u8.html"><code class="highlighter-rouge">u8</code></a><code class="highlighter-rouge">&gt;</code>, <code class="highlighter-rouge">&amp;</code><a href="https://doc.rust-lang.org/std/primitive.u8.html"><code class="highlighter-rouge">u8</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-datetime.html">Date/Time Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">timestamp</code>, <code class="highlighter-rouge">timestamp(p) without time zone</code></td>
+              <td>8 bytes</td>
+              <td>date and time of day</td>
+              <td>4713 BC to 294276 AD, 1 microsecond</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Timestamp.html"><code class="highlighter-rouge">Timestamp</code></a></td>
+              <td><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveDateTime.html"><code class="highlighter-rouge">chrono::NaiveDateTime</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">timestamptz</code>, <code class="highlighter-rouge">timestamp(p) with time zone</code></td>
+              <td>8 bytes</td>
+              <td>date and time of day, with time zone</td>
+              <td>4713 BC to 294276 AD, 1 microsecond</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Timestamptz.html"><code class="highlighter-rouge">Timestamptz</code></a></td>
+              <td><a href="http://docs.diesel.rs/chrono/struct.DateTime.html"><code class="highlighter-rouge">chrono::DateTime</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">date</code></td>
+              <td>4 bytes</td>
+              <td>calendar date (year, month, day)</td>
+              <td>4713 BC to 5874897 AD, 1 day</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Date.html"><code class="highlighter-rouge">Date</code></a></td>
+              <td><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveDate.html"><code class="highlighter-rouge">chrono::NaiveDate</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">time</code>, <code class="highlighter-rouge">time(p) without time zone</code></td>
+              <td>8 bytes</td>
+              <td>time of day (no date)</td>
+              <td>00:00:00 to 24:00:00, 1 microsecond</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Time.html"><code class="highlighter-rouge">Time</code></a></td>
+              <td><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveTime.html"><code class="highlighter-rouge">chrono::NaiveTime</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">timetz</code>, <code class="highlighter-rouge">time(p) with time zone</code></td>
+              <td>12 bytes</td>
+              <td>time of day (no date), with time zone</td>
+              <td>00:00:00+1459 to 24:00:00-1459, 1 microsecond</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">interval(fields)(p)</code></td>
+              <td>16 bytes</td>
+              <td>time span</td>
+              <td>-178000000 years to 178000000 years, 1 microsecond</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Interval.html"><code class="highlighter-rouge">Interval</code></a></td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/data_types/struct.PgInterval.html"><code class="highlighter-rouge">PgInterval</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-boolean.html">Boolean Type</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">boolean</code>, <code class="highlighter-rouge">bool</code></td>
+              <td>1 byte</td>
+              <td>logical Boolean (true/false)</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/sql_types/struct.Bool.html"><code class="highlighter-rouge">Bool</code></a></td>
+              <td><a href="https://doc.rust-lang.org/std/primitive.bool.html"><code class="highlighter-rouge">bool</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-geometric.html">Geometric Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">point</code> <code class="highlighter-rouge">(x,y)</code></td>
+              <td>16 bytes</td>
+              <td>geometric point on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">line</code> <code class="highlighter-rouge">{A,B,C}</code></td>
+              <td>32 bytes</td>
+              <td>infinite line on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">lseg</code> <code class="highlighter-rouge">((x1,y1),(x2,y2))</code></td>
+              <td>32 bytes</td>
+              <td>finite line segment on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">box</code> <code class="highlighter-rouge">((x1,y1),(x2,y2))</code></td>
+              <td>32 bytes</td>
+              <td>rectangular box on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">path</code> <code class="highlighter-rouge">((x1,y1),...)</code></td>
+              <td>16+16n bytes</td>
+              <td>closed geometric path on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">path</code> <code class="highlighter-rouge">[(x1,y1),...]</code></td>
+              <td>16+16n bytes</td>
+              <td>open geometric path on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">polygon</code> <code class="highlighter-rouge">((x1,y1),...)</code></td>
+              <td>40+16n bytes</td>
+              <td>closed geometric path on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">circle</code> <code class="highlighter-rouge">&lt;(x,y),r\&gt;</code></td>
+              <td>24 bytes</td>
+              <td>circle on a plane</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-net-types.html">Network Address Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">cidr</code></td>
+              <td>7 or 19 bytes</td>
+              <td>IPv4 or IPv6 network address</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Cidr.html"><code class="highlighter-rouge">Cidr</code></a></td>
+              <td><a href="http://docs.diesel.rs/ipnetwork/enum.IpNetwork.html"><code class="highlighter-rouge">ipnetwork::IpNetwork</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">inet</code></td>
+              <td>7 or 19 bytes</td>
+              <td>IPv4 or IPv6 host address</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Inet.html"><code class="highlighter-rouge">Inet</code></a></td>
+              <td><a href="http://docs.diesel.rs/ipnetwork/enum.IpNetwork.html"><code class="highlighter-rouge">ipnetwork::IpNetwork</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">macaddr</code></td>
+              <td>6 bytes</td>
+              <td>MAC address</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.MacAddr.html"><code class="highlighter-rouge">MacAddr</code></a></td>
+              <td><code class="highlighter-rouge">[</code><a href="https://doc.rust-lang.org/std/primitive.u8.html"><code class="highlighter-rouge">u8</code></a><code class="highlighter-rouge">; 6]</code></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">macaddr8</code></td>
+              <td>8 bytes</td>
+              <td>MAC address (EUI-64 format)</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-enum.html">Enumerated Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">enum</code></td>
+              <td>4 bytes</td>
+              <td>enumerated value</td>
+              <td>&nbsp;</td>
+              <td>(user-defined)</td>
+              <td><a href="https://doc.rust-lang.org/std/string/struct.String.html"><code class="highlighter-rouge">String</code></a>, <a href="https://doc.rust-lang.org/book/first-edition/enums.html"><code class="highlighter-rouge">enum</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-bit.html">Bit String Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">bit(n)</code></td>
+              <td>1 byte per 8 bits + 5 or 8 bytes</td>
+              <td>fixed-length bit string</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">bit varying(n)</code>, <code class="highlighter-rouge">varbit</code></td>
+              <td>1 byte per 8 bits + 5 or 8 bytes</td>
+              <td>variable-length bit string</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-textsearch.html">Text Search Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">tsvector</code></td>
+              <td>&nbsp;</td>
+              <td>text search document</td>
+              <td>&nbsp;</td>
+              <td><code class="highlighter-rouge">TsVector</code></td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">tsquery</code></td>
+              <td>&nbsp;</td>
+              <td>text search query</td>
+              <td>&nbsp;</td>
+              <td><code class="highlighter-rouge">TsQuery</code></td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-uuid.html">UUID Type</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">uuid</code></td>
+              <td>16 bytes</td>
+              <td>universally unique identifier</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Uuid.html"><code class="highlighter-rouge">Uuid</code></a></td>
+              <td><a href="https://docs.rs/uuid/0.5.1/uuid/struct.Uuid.html"><code class="highlighter-rouge">uuid::Uuid</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-xml.html">XML Type</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">xml</code></td>
+              <td>&nbsp;</td>
+              <td>XML data</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/datatype-json.html">JSON Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">json</code></td>
+              <td>&nbsp;</td>
+              <td>textual JSON data</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Json.html"><code class="highlighter-rouge">Json</code></a></td>
+              <td><a href="http://docs.diesel.rs/serde_json/value/enum.Value.html"><code class="highlighter-rouge">serde_json::Value</code></a></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">jsonb</code></td>
+              <td>&nbsp;</td>
+              <td>binary JSON data, decomposed</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Jsonb.html"><code class="highlighter-rouge">Jsonb</code></a></td>
+              <td><a href="http://docs.diesel.rs/serde_json/value/enum.Value.html"><code class="highlighter-rouge">serde_json::Value</code></a></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/arrays.html"><code class="highlighter-rouge">Arrays</code></a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">t[]</code></td>
+              <td>&nbsp;</td>
+              <td>array of values</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Array.html"><code class="highlighter-rouge">Array</code></a><code class="highlighter-rouge">&lt;T&gt;</code></td>
+              <td><a href="https://doc.rust-lang.org/std/vec/struct.Vec.html"><code class="highlighter-rouge">Vec</code></a><code class="highlighter-rouge">&lt;T&gt;</code>, <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html"><code class="highlighter-rouge">Vec</code></a><code class="highlighter-rouge">&lt;</code><a href="https://doc.rust-lang.org/std/option/enum.Option.html"><code class="highlighter-rouge">Option</code></a><code class="highlighter-rouge">&lt;T&gt;&gt;</code>, <code class="highlighter-rouge">&amp;[T]</code>, <code class="highlighter-rouge">&amp;[</code><a href="https://doc.rust-lang.org/std/option/enum.Option.html"><code class="highlighter-rouge">Option</code></a><code class="highlighter-rouge">&lt;T&gt;]</code></td>
+            </tr>
+            <tr>
+              <td><a href="https://www.postgresql.org/docs/current/static/rangetypes.html">Range Types</a></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">int4range</code></td>
+              <td>&nbsp;</td>
+              <td>range of integer</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Range.html"><code class="highlighter-rouge">Range</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/diesel/sql_types/struct.Integer.html"><code class="highlighter-rouge">Integer</code></a><code class="highlighter-rouge">&gt;</code></td>
+              <td><code class="highlighter-rouge">(</code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="https://doc.rust-lang.org/std/primitive.i32.html"><code class="highlighter-rouge">i32</code></a><code class="highlighter-rouge">&gt;, </code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="https://doc.rust-lang.org/std/primitive.i32.html"><code class="highlighter-rouge">i32</code></a><code class="highlighter-rouge">&gt;)</code></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">int8range</code></td>
+              <td>&nbsp;</td>
+              <td>range of bigint</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Range.html"><code class="highlighter-rouge">Range</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/diesel/sql_types/struct.BigInt.html"><code class="highlighter-rouge">BigInt</code></a><code class="highlighter-rouge">&gt;</code></td>
+              <td><code class="highlighter-rouge">(</code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="https://doc.rust-lang.org/std/primitive.i64.html"><code class="highlighter-rouge">i64</code></a><code class="highlighter-rouge">&gt;, </code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="https://doc.rust-lang.org/std/primitive.i64.html"><code class="highlighter-rouge">i64</code></a><code class="highlighter-rouge">&gt;)</code></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">numrange</code></td>
+              <td>&nbsp;</td>
+              <td>range of numeric</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Range.html"><code class="highlighter-rouge">Range</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/diesel/sql_types/struct.Numeric.html"><code class="highlighter-rouge">Numeric</code></a><code class="highlighter-rouge">&gt;</code></td>
+              <td><code class="highlighter-rouge">(</code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/bigdecimal/struct.BigDecimal.html"><code class="highlighter-rouge">bigdecimal::BigDecimal</code></a><code class="highlighter-rouge">&gt;, </code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/bigdecimal/struct.BigDecimal.html"><code class="highlighter-rouge">bigdecimal::BigDecimal</code></a><code class="highlighter-rouge">&gt;)</code></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">tsrange</code></td>
+              <td>&nbsp;</td>
+              <td>range of timestamp</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Range.html"><code class="highlighter-rouge">Range</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/diesel/sql_types/struct.Timestamp.html"><code class="highlighter-rouge">Timestamp</code></a><code class="highlighter-rouge">&gt;</code></td>
+              <td><code class="highlighter-rouge">(</code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveDateTime.html"><code class="highlighter-rouge">chrono::NaiveDateTime</code></a><code class="highlighter-rouge">&gt;, </code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveDateTime.html"><code class="highlighter-rouge">chrono::NaiveDateTime</code></a><code class="highlighter-rouge">&gt;)</code></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">tstzrange</code></td>
+              <td>&nbsp;</td>
+              <td>range of timestamptz</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Range.html"><code class="highlighter-rouge">Range</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Timestamptz.html"><code class="highlighter-rouge">Timestamptz</code></a><code class="highlighter-rouge">&gt;</code></td>
+              <td><code class="highlighter-rouge">(</code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/chrono/struct.DateTime.html"><code class="highlighter-rouge">chrono::DateTime</code></a><code class="highlighter-rouge">&gt;, </code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/chrono/struct.DateTime.html"><code class="highlighter-rouge">chrono::DateTime</code></a><code class="highlighter-rouge">&gt;)</code></td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">daterange</code></td>
+              <td>&nbsp;</td>
+              <td>range of date</td>
+              <td>&nbsp;</td>
+              <td><a href="http://docs.diesel.rs/diesel/pg/types/sql_types/struct.Range.html"><code class="highlighter-rouge">Range</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/diesel/sql_types/struct.Date.html"><code class="highlighter-rouge">Date</code></a><code class="highlighter-rouge">&gt;</code></td>
+              <td><code class="highlighter-rouge">(</code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveDate.html"><code class="highlighter-rouge">chrono::NaiveDate</code></a><code class="highlighter-rouge">&gt;, </code><a href="https://doc.rust-lang.org/std/collections/enum.Bound.html"><code class="highlighter-rouge">Bound</code></a><code class="highlighter-rouge">&lt;</code><a href="http://docs.diesel.rs/chrono/naive/struct.NaiveDate.html"><code class="highlighter-rouge">chrono::NaiveDate</code></a><code class="highlighter-rouge">&gt;)</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
