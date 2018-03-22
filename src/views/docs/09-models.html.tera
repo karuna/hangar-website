@@ -163,7 +163,7 @@ use schema::posts;
 pub fn index(db: ConnPool) -> Template {
     let posts_query = posts::dsl::posts.load::<&zwj;Post>(&**db).optional();
     let posts_list = posts_query.unwrap();
-        let header = DefaultHeader {
+    let header = DefaultHeader {
         title: String::from("Posts"),
     };
     let context = ViewModel::new(&header, &posts_list);

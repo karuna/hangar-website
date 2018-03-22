@@ -9,7 +9,68 @@
         Hangar is an opinionated web framework using Rust programming language. Built using
         <a href="https://rocket.rs/" target="_blank">Rocket</a>,
         <a href="https://diesel.rs/" target="_blank">Diesel</a>, and other Rust libraries.
+        <br>
+        It's build with speed, security, and web developer's usability in mind.
       </h2>
+      <p>
+        Benchmark comparison. First is non Hangar framework, 5 threads worker & 5 connection pool querying 2 records
+      </p>
+      <pre>ab -n 10000 -c 100 http://0.0.0.0:3000/posts
+This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 0.0.0.0 (be patient)
+Completed 1000 requests
+Completed 2000 requests
+Completed 3000 requests
+Completed 4000 requests
+Completed 5000 requests
+Completed 6000 requests
+Completed 7000 requests
+Completed 8000 requests
+Completed 9000 requests
+Completed 10000 requests
+Finished 10000 requests
+
+
+Server Software:
+Server Hostname:        0.0.0.0
+Server Port:            3000
+
+Document Path:          /posts
+Document Length:        1635 bytes
+
+Concurrency Level:      100
+Time taken for tests:   157.602 seconds
+Complete requests:      10000
+Failed requests:        0
+Non-2xx responses:      10000
+Total transferred:      18080000 bytes
+HTML transferred:       16350000 bytes
+Requests per second:    63.45 [#/sec] (mean)
+Time per request:       1576.015 [ms] (mean)
+Time per request:       15.760 [ms] (mean, across all concurrent requests)
+Transfer rate:          112.03 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.3      0       4
+Processing:   176 1568  95.8   1567    1815
+Waiting:      164 1563  95.6   1562    1813
+Total:        179 1569  95.6   1567    1815
+
+Percentage of the requests served within a certain time (ms)
+  50%   1567
+  66%   1591
+  75%   1607
+  80%   1618
+  90%   1650
+  95%   1677
+  98%   1708
+  99%   1728
+ 100%   1815 (longest request)
+      </pre>
     </div>
   </section>
   <section class="section">
