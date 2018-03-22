@@ -32,7 +32,11 @@
           <a class="navbar-item" href="/">
             <img src={{macros::asset_url(filename="logo.svg")}} alt="Hangar Homepage">
           </a>
-          <div class="navbar-burger burger" data-target="navMenu"></div>
+          <div class="navbar-burger burger" data-target="navMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
         <div class="navbar-menu" id="navMenu">
           <div class="navbar-start">
