@@ -58,7 +58,7 @@ use schema::posts;
 pub struct Post {
     pub id: i32,
     pub title: String,
-    pub body: Option<String>,
+    pub body: Option<&zwj;String>,
     pub user_id: i32,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,

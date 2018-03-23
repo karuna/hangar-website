@@ -122,10 +122,17 @@ pub fn _19() -> Template {
     Template::render("docs/19-assets", &context)
 }
 
-#[get("/20-deploying")]
+#[get("/20-test")]
 pub fn _20() -> Template {
     let context = default_view_model();
-    Template::render("docs/20-deploying", &context)
+    Template::render("docs/20-test", &context)
+}
+
+
+#[get("/21-deploying")]
+pub fn _21() -> Template {
+    let context = default_view_model();
+    Template::render("docs/21-deploying", &context)
 }
 
 fn default_view_model() -> ViewModel<DefaultHeader, DefaultBody> {

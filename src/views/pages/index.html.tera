@@ -10,7 +10,7 @@
         <a href="https://rocket.rs/" target="_blank">Rocket</a>,
         <a href="https://diesel.rs/" target="_blank">Diesel</a>, and other Rust libraries.
         <br>
-        It's build with speed, security, and web developer's usability in mind.
+        It's build with speed, security, and web developer's usability in mind. The main goal for Hangar is to be a single framework both for backend and Rust webassembly development.
       </h2>
       <!--p>
         Benchmark comparison. First is non Hangar framework, 5 threads worker & 5 connection pool querying 2 records

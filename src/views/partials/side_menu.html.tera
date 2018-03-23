@@ -60,7 +60,10 @@
           <a href="/docs/19-assets">Assets</a>
         </li>
         <li>
-          <a href="/docs/20-deploying">Deploying</a>
+          <a href="/docs/20-test">Test</a>
+        </li>
+        <li>
+          <a href="/docs/21-deploying">Deploying</a>
         </li>
       </ul>
     </aside>
