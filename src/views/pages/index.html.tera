@@ -12,7 +12,7 @@
         <br>
         It's build with speed, security, and web developer's usability in mind.
         <br>
-        The main goal for Hangar is to be a single framework both for Rust web backend and WebAssembly development.
+        The main goal for Hangar is to be a full stack framework both for Rust web backend and WebAssembly development.
       </h2>
     </div>
   </section>

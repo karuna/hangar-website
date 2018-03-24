@@ -20,11 +20,11 @@
       <p>
         Right now this feature is still being developed, but currently we are using <a href="https://parceljs.org/" target="_blank">Parcel Bundler</a>.
         <br>
-        We have 2 files in <code>client/assets</code> folder: <code>application.js</code> and <code>application.css</code> as the starting point. To run parcel watcher while developing, you can use <a href="https://yarnpkg.com/" target="_blank">Yarn</a> to install parcel and run these commands in 2 terminals:
+        We have 2 files in <code>client/assets</code> folder: <code>application.js</code> and <code>application.css</code> as the starting point. To run parcel watcher while developing, you can use <a href="https://yarnpkg.com/" target="_blank">Yarn</a> or <code>npm</code> to install parcel and run these commands in 2 terminals:
         <pre>
-          yarn install
-          yarn run start-js
-          yarn run start-css
+yarn install
+yarn run start-js
+yarn run start-css
         </pre>
         It will precompile assets to <code>src/assets</code> folder.
       </p>

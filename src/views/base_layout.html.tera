@@ -8,14 +8,14 @@
   <meta name="author" content="Karuna Murti">
   <meta charset="utf-8">
   <title>Hangar Web Framework</title>
-  <meta name="description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and webassembly development.">
+  <meta name="description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and WebAssembly development.">
   <meta itemprop="name" content="Hangar Web Framework">
-  <meta itemprop="description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and webassembly development.">
+  <meta itemprop="description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and WebAssembly development.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Hangar Web Framework">
-  <meta name="twitter:description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and webassembly development.">
+  <meta name="twitter:description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and WebAssembly development.">
   <meta name="og:title" content="Hangar Web Framework">
-  <meta name="og:description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and webassembly development.">
+  <meta name="og:description" content="Hangar is an opinionated web framework using Rust programming language. Built using Rocket, Diesel, and other Rust libraries aiming to be a single platform for backend and WebAssembly development.">
   <meta name="og:url" content="http://hangar-project.org">
   <meta name="og:site_name" content="Hangar Web Framework">
   <meta name="og:locale" content="en_US">
