@@ -11,65 +11,7 @@
         <br>
         You can see an example of uploading multipart form like this:
         <pre>
-use rocket::Data;
-use rocket::http::ContentType;
-use multipart::server::Multipart;
-use multipart::server::save::SaveResult::*;
-
-#[post("/upload", data = "<&zwj;data>")]
-pub fn upload(cont_type: &ContentType, data: Data) -> Result<Template, Template> {
-    if !cont_type.is_form_data() {
-        let body = json!({
-            "content": "Not a valid upload content",
-        });
-        let context = ViewModel::new(DefaultHeader::default(), &body.0);
-        return Err(Template::render("pages/index", &context));
-    }
-
-    let (_, boundary) = cont_type
-        .params()
-        .find(|&(k, _)| k == "boundary")
-        .ok_or_else(|| {
-            let body = json!({
-                "content": "Not a valid upload content",
-            });
-            let context = ViewModel::new(DefaultHeader::default(), &body.0);
-            Template::render("pages/index", &context)
-        })?;
-
-    let uploaded = process_upload(boundary, data);
-    if uploaded.is_err() {
-        let err = uploaded.unwrap();
-        println!("Err");
-    } else {
-        let result = uploaded.unwrap();
-        println!("Ok");
-    }
-
-    let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
-    Ok(Template::render("pages/index", &context))
-}
-
-fn process_upload(boundary: &str, data: Data) -> Result<String, String> {
-    Multipart::with_body(data.open(), boundary).foreach_entry(|mut entry|{
-        let part = entry.data.save().size_limit(None).temp();
-        match part {
-            Full(full_part) => {
-                // do something with full part
-                println!("Full part {:?}", full_part)
-            },
-            Partial(partial, reason) => {
-                // do something with partial part
-                println!("Request partially processed: {:?}", reason);
-                println!("{:?}", partial);
-            },
-            Error(e) => println!("{:?}", e),
-        }
-
-    });
-
-    Ok(String::from("Success"))
-}
+{{payload.01}}
         </pre>
       </p>
     </div>

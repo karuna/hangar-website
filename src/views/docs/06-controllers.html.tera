@@ -35,7 +35,6 @@ pub fn endpoint2() -> &'static str {
     "Endpoint2"
 }
       </pre>
-
     </div>
   </div>
 </div>

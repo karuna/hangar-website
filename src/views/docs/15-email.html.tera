@@ -11,30 +11,7 @@
         <br>
         If you want to use built in mailer, first you need to <a href="/docs/04-configurations">configure</a> the email. Afer that you can send it from actions or in models. Example:
         <pre>
-use lettre::{EmailAddress, SimpleSendableEmail};
-use libs::email::{Mailer, MailerConfig};
-
-#[get("/email")]
-pub fn email(config: State<&zwj;MailerConfig>) -> Template {
-    let email = SimpleSendableEmail::new(
-        EmailAddress::new("user@localhost".to_string()),
-        vec![EmailAddress::new("root@localhost".to_string())],
-        Uuid::new_v4().to_string(),
-        "Hello world".to_string(),
-    );
-
-    let mailer_result = Mailer::new_from_config(&config.0);
-    let send_mail = if mailer_result.is_ok() {
-        mailer_result.unwrap().send_email(&email)
-    } else {
-        Err(String::from("Cannot send email"))
-    };
-    let body = DefaultBody {
-        content: send_mail.unwrap(),
-    };
-    let context = ViewModel::new(DefaultHeader::default(), &body);
-    Template::render("pages/index", &context)
-}
+{{payload.01}}
         </pre>
       </p>
     </div>

@@ -11,8 +11,7 @@
         <li>
           Generate new application:
           <pre>
-hangar new --name test_app --author "Will Smoth <&zwj;will_s@example.com>" --database sqlite --database-url=test_app.sqlite
-cd test_app
+{{payload.01}}
           </pre>
         </li>
         <li>
@@ -24,12 +23,7 @@ hangar db print-schema > schema.rs
         </li>
         <li>On <code>src/libs/routes.rs</code> file add new route:
           <pre>
-fn root_urls() -> Vec<Route> {
-    routes![
-        ...
-        pages_controller::hello_world
-    ]
-}
+{{payload.02}}
           </pre>
         </li>
         <li>On <code>src/controllers/pages_controller.rs</code> add a new action:
@@ -43,8 +37,7 @@ pub fn hello_world() -> Template {
         </li>
         <li>Make a new Tera template file on <code>views/pages/hellow_world.html.tera</code>:
           <pre>
-<&zwj;h1>Hello World!<&zwj;/h1>
-<&zwj;p>Welcome to Hangar application.<&zwj;/p>
+{{payload.03}}
           </pre>
         </li>
         <li>

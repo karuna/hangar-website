@@ -46,23 +46,7 @@ DROP TABLE posts;
         <li>
           After you print the schema you can make a model file in <code>src/models/post.rs</code>:
           <pre>
-use chrono::NaiveDateTime;
-use diesel::prelude::*;
-
-use models::user::User;
-use schema::posts;
-
-#[derive(Debug, Serialize, Deserialize, Queryable, Identifiable, Associations, AsChangeset)]
-#[belongs_to(User)]
-#[table_name = "posts"]
-pub struct Post {
-    pub id: i32,
-    pub title: String,
-    pub body: Option<&zwj;String>,
-    pub user_id: i32,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
-}
+{{payload.01}}
           </pre>
           If you take a look at the file, it contains <code>use schema::posts;</code>. That's because Diesel provides macro inside <code>src/schema.rs</code> which we can use.
           <br>
@@ -93,16 +77,7 @@ impl Default for Post {
         <li>
           To create new post, you can create new <code>struct</code>:
           <pre>
-use validator::Validate;
-...
-#[derive(Validate, Insertable, Serialize)]
-#[table_name = "posts"]
-pub struct NewPost<&zwj;'a> {
-    pub user_id: i32,
-    #[validate(length(min = "1"))]
-    pub title: String,
-    pub body: Option<&zwj;&'a String>,
-}
+{{payload.02}}
           </pre>
           We are creating a struct which has only inserted columns. Also we are using <a href="https://docs.rs/validator/" target="_blank">https://docs.rs/validator/</a> crates to validate the content of the structure. It's already included in the <code>Cargo.toml</code> so you don't need to add that.
         </li>
@@ -152,198 +127,34 @@ pub mod post;
       <p>
         Let's start by querying post records. We use <code>ConnPool</code>, a state which is managed by Rocket when we start the application.
         <pre>
-use rocket_contrib::Template;
-
-use libs::db::ConnPool;
-use models::post::Post;
-use view_models::*;
-use schema::posts;
-
-#[get("/", format = "text/html")]
-pub fn index(db: ConnPool) -> Template {
-    let posts_query = posts::dsl::posts.load::<&zwj;Post>(&**db).optional();
-    let posts_list = posts_query.unwrap();
-    let header = DefaultHeader {
-        title: String::from("Posts"),
-    };
-    let context = ViewModel::new(&header, &posts_list);
-    Template::render("posts/index", &context)
-}
+{{payload.03}}
         </pre>
       </p>
       <p>
         Now that we know how to get a list, let's make a function for a single id.
         <pre>
-use rocket::response::{Flash, Redirect};
-...
-#[get("/<&zwj;id>", format = "text/html")]
-pub fn show(id: i32, db: ConnPool) -> Result<&zwj;Template, Flash<&zwj;Redirect>> {
-    let post_query = posts::dsl::posts.find(&id).first::<&zwj;Post>(&**db).optional();
-
-    if let Ok(Some(post)) = post_query {
-        let header = DefaultHeader {
-            title: String::from("Post"),
-        };
-        let context = ViewModel::new(&header, &post);
-        Ok(Template::render("posts/show", &context))
-    } else {
-        Err(Flash::error(Redirect::to("/posts"), "404"))
-    }
-}
+{{payload.04}}
         </pre>
       </p>
       <h3>Inserting record</h3>
       <p>
         Let's continue with inserting. We are getting the parameters <code>PostFromParam</code>, and converting it to <code>NewPost</code>. After we validate, we insert into the database.
         <pre>
-use std::default::Default;
-
-use diesel;
-use diesel::prelude::*;
-use diesel::result::Error;
-use validator::Validate;
-
-use rocket::request::LenientForm;
-use guards::user::CurrentUser;
-use models::post::{Post, PostFromParam};
-...
-#[post("/", data = "<&zwj;post_param>", format = "application/x-www-form-urlencoded")]
-pub fn create(
-    post_param: LenientForm<&zwj;PostFromParam>,
-    current_user: CurrentUser,
-    db: ConnPool,
-) -> Result<&zwj;Flash<&zwj;Redirect>, Template> {
-    let new_post_from_param = post_param.into_inner();
-    let user_id = current_user.id();
-    let new_post = new_post_from_param.to_new_post(user_id);
-    if new_post.validate().is_err() {
-        return Err(render_new_post(current_user, Some(&new_post_from_param)));
-    }
-    let result = diesel::insert_into(posts::table)
-        .values(&new_post)
-        .get_result::<&zwj;Post>(&**db);
-    if let Err(Error::DatabaseError(_err, _)) = result {
-        return Err(render_new_post(current_user, Some(&new_post_from_param)));
-    }
-    Ok(Flash::success(
-        Redirect::to("/posts"),
-        "Successfully created post.",
-    ))
-}
-
-fn render_new_post(user: CurrentUser, post: Option<&zwj;&PostFromParam>) -> Template {
-    let header = DefaultHeader {
-        title: String::from("New Post"),
-    };
-    if post.is_some() {
-        let new_post = post.unwrap();
-        let context = ViewModel::new(&header, &new_post);
-        Template::render("posts/new", &context)
-    } else {
-        let new_post = Post {
-            user_id: user.id(),
-            ..Default::default()
-        };
-        let context = ViewModel::new(&header, &new_post);
-        Template::render("posts/new", &context)
-    }
-}
+{{payload.05}}
         </pre>
       </p>
       <h3>Updating</h3>
       <p>
         After inserting, let's do the updating. First we are getting the parameters <code>PostFromParam</code>, after that we query the existing record and check the user and assign the changes and update the record.
         <pre>
-use std::default::Default;
-
-use diesel;
-use diesel::prelude::*;
-use diesel::result::Error;
-use validator::Validate;
-
-use rocket::request::LenientForm;
-use rocket::response::{Flash, Redirect};
-use rocket_contrib::Template;
-
-use guards::user::CurrentUser;
-use libs::db::ConnPool;
-use models::post::{Post, PostFromParam};
-use view_models::*;
-use schema::posts;
-
-
-#[post("/<&zwj;id>", data = "<&zwj;post_param>", format = "application/x-www-form-urlencoded")]
-pub fn update(
-    id: i32,
-    post_param: LenientForm<&zwj;PostFromParam>,
-    current_user: CurrentUser,
-    db: ConnPool,
-) -> Result<&zwj;Flash<&zwj;Redirect>, Template> {
-    let post_from_param = post_param.into_inner();
-    let user_id = current_user.id();
-    let post_query = posts::dsl::posts.find(&id).first::<&zwj;Post>(&**db).optional();
-    if let Ok(Some(mut post)) = post_query {
-        if user_id != post.user_id {
-            return Ok(Flash::error(Redirect::to("/posts"), "Not authorized."));
-        }
-        post.title = post_from_param.title;
-        post.body = post_from_param.body;
-        let command = diesel::update(&post).set(&post);
-        let result = command.get_result::<&zwj;Post>(&**db).optional();
-        if let Err(Error::DatabaseError(_err, _)) = result {
-            return Err(render_edit_post(&post));
-        }
-
-        Ok(Flash::success(
-            Redirect::to("/posts"),
-            "Successfully created post",
-        ))
-    } else {
-        return Ok(Flash::error(Redirect::to("/posts"), "Not authorized."));
-    }
-}
-
-fn render_edit_post(post: &Post) -> Template {
-    let header = DefaultHeader {
-        title: String::from("Edit Post"),
-    };
-    let context = ViewModel::new(&header, &post);
-    Template::render("posts/edit", &context)
-}
+{{payload.06}}
         </pre>
       </p>
       <h3>Deleting Record</h3>
       <p>
         This one is more straightforward. We find the record and then delte the record.
         <pre>
-#[get("/<&zwj;id>/delete", format = "text/html")]
-pub fn delete(
-    id: i32,
-    _current_user: CurrentUser,
-    db: ConnPool,
-) -> Result<Flash<Redirect>, Flash<Redirect>> {
-    let delete_query = posts::dsl::posts
-        .find(&id)
-        .select(posts::id)
-        .first::<&zwj;i32>(&**db)
-        .optional();
-    if let Ok(Some(_)) = delete_query {
-        let result = diesel::delete(posts::dsl::posts.filter(posts::id.eq(&id)))
-            .execute(&**db)
-            .optional();
-        if let Err(Error::DatabaseError(_err, _)) = result {
-            return Ok(redirect_delete("Something went wrong."));
-        }
-        return Ok(redirect_delete("Successfully deleting post."));
-    } else {
-        return Ok(redirect_delete("Cannot find post."));
-    }
-}
-
-fn redirect_delete(reason: &str) -> Flash<Redirect> {
-    Flash::error(Redirect::to("/posts"), reason)
-}
-
+{{payload.07}}
         </pre>
       </p>
       <h3>Data Type</h3>

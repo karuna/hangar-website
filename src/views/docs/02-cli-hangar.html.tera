@@ -9,14 +9,15 @@
   <br>
   The other 3 parameters are:
   <pre>
---author <&zwj;AUTHOR>          Author of the project: `John Doe <user@example.com>`
---database <&zwj;DB>            Diesel database connection you want to use for the Hangar Project.
+{{"--author <AUTHOR>          Author of the project: 'John Doe <user@example.com>'
+--database <DB>            Diesel database connection you want to use for the Hangar Project.
                            Valid value: postgresql, mysql, or sqlite.
                            Default: postgresql
---database-url <&zwj;DB_URL>    Url for your database
+--database-url <DB_URL>    Url for your database
                            postgresql: postgres://user:password@host/db_name
                            mysql: mysql://user:password@host/db_name
-                           sqlite: path/to/db.sqlite
+                           sqlite: path/to/db.sqlite"
+}}
   </pre>
 </p>
 <p>

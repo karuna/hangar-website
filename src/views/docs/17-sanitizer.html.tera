@@ -12,22 +12,7 @@
       <p>
         Usage example:
         <pre>
-#[derive(Debug, Serialize)]
-struct TestView<&zwj;'a> {
-    content: &'a SanitizedStr,
-}
-
-#[get("/sanitized")]
-pub fn sanitized() -> Template {
-    let header = DefaultHeader {
-        title: String::from("Sanitized"),
-    };
-    let test_str =
-        SanitizedStr::new("<&zwj;b><&zwj;img src='' onerror='alert(\\'hax\\')'>I cannot hack you<&zwj;/b>");
-    let body = TestView { content: &test_str };
-    let context = ViewModel::new(&header, &body);
-    Template::render("pages/sanitize", &context)
-}
+{{payload.01}}
         </pre>
       </p>
     </div>
