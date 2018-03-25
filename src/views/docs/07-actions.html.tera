@@ -181,7 +181,9 @@ fn new(point: Point) -> String { ... }
       </p>
       <h2>State</h2>
       <p>
-        State is another type that can be used as Request Guard. You can put it in <code>src/libs/init.rs</code>.
+        State is another type that can be used as Request Guard. The concept is that you describe a struct with <code>Sync+Send</code> trait which will can be used by all request. You can put it in <code>src/libs/init.rs</code> like <code>rocket.manage(YourStruct)</code>.
+        <br>
+        After that you can use <code>State&lt;YourStruct&gt;</code> as parameter of the action function and you can access the same struct in different workers.
       </p>
     </div>
   </div>
