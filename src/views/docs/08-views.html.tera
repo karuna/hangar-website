@@ -35,7 +35,16 @@ pub fn main() -> Template {
         <br>
         The definition for <code>ViewModel</code> is like this:
         <pre>
-{{payload.01}}
+{{'#[derive(Debug, Serialize)]
+pub struct ViewModel<H, B>
+where
+    H: Serialize,
+    B: Serialize,
+{
+    pub header: H,
+    pub body: B,
+    pub payload: Map<String, Value>,
+}'}}
         </pre>
       </p>
       <p>
@@ -50,7 +59,29 @@ pub fn main() -> Template {
         <br>
         Example on how to modify <code>header</code> or <code>body</code> for <code>ViewModel</code>:
         <pre>
-{{payload.02}}
+{{'// src/controllers/example.rs
+
+use rocket::response::Redirect;
+use rocket_contrib::Template;
+use view_models::*;
+
+// You probably should put this struct into a module for better app structure
+#[derive(Debug, Serialize)]
+struct TestView {
+    interesting_part: String,
+}
+
+#[get("/some_view")]
+pub fn some_view() -> Template {
+    let test_view = TestView {
+        interesting_part: String::from("ajep")
+    };
+    let mut context = ViewModel::new(DefaultHeader::default(), &test_view);
+    Template::render("some_view", &context)
+}
+
+// src/views/some_view.html.tera
+<h1>{{body.interesting_part}}</h1>'}}
         </pre>
       </p>
       <h3>Payload</h3>
@@ -61,7 +92,22 @@ pub fn main() -> Template {
         <br>
         Example on how to use <code>payload</code>:
         <pre>
-{{payload.03}}
+{{'// src/controllers/example.rs
+
+use rocket::response::Redirect;
+use rocket_contrib::Template;
+use view_models::*;
+use serde_json::Value;
+
+#[get("/some_view")]
+pub fn some_view() -> Template {
+    let mut context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
+    context.payload.insert("key".to_string(), Value::Number(11.into()));
+    Template::render("some_view", &context)
+}
+
+// src/views/some_view.html.tera
+<h1>{{payload.key}}</h1>'}}
         </pre>
       </p>
       <h2>Base Layout</h2>
@@ -69,7 +115,11 @@ pub fn main() -> Template {
         Hangar by default has one file as base layout for the template: <code>src/views/base_layout.html.tera</code>.
         You can use the default layout by putting this in the view template:
         <pre>
-{{payload.04}}
+{{'{% extends "base_layout" %}
+
+{% block content %}
+  Insert some content here
+{% endblock content %}'}}
         </pre>
       </p>
       <h2>Macro</h2>
@@ -78,10 +128,10 @@ pub fn main() -> Template {
         <br>
         It's currently include one macro: <code>asset_url</code>. You can use that macro as a shortcut for asset folder:
         <br>
-        <code>{{payload.05}}</code>.
+        <code>{{'<script src={{macros::asset_url(filename="application.js")}}></script>'}}</code>.
       </p>
       <h2>Partial</h2>
-      <p>You can include other template like this: <code>{{payload.06}}</code></p>
+      <p>You can include other template like this: <code>{{'{% include "path/to_some_file" %}'}}</code></p>
     </div>
   </div>
 </div>

@@ -26,16 +26,31 @@ pub fn something() -> Template {
       <p>
         You can make an action dynamic by putting path segment in an angle bracket <code><></code>.
         <br>
-        For example you might have this route: <code>{{payload.01}}</code>. The dynamic part of the path must be used as a argument in the function and the argument type must implement <a href="https://api.rocket.rs/rocket/request/trait.FromParam.html" target="_blank">FromParam</a> trait.
+        For example you might have this route: <code>{{'/users/<uuid>'}}</code>. The dynamic part of the path must be used as a argument in the function and the argument type must implement <a href="https://api.rocket.rs/rocket/request/trait.FromParam.html" target="_blank">FromParam</a> trait.
        <pre>
-{{payload.02}}
+{{'impl FromParam for CustomType {
+...
+}
+
+#[get("/users/<uuid>")]
+fn show(uuid: &CustomType) -> String {
+    format!("UUID is: {}", uuid.as_str())
+}'}}
        </pre>
       </p>
       <h2>Route Rankings</h2>
       <p>
         You can have have more than one function with the same route but it must have different rankings.
         <pre>
-{{payload.03}}
+{{'#[get("/<id>/edit", format = "text/html")]
+pub fn edit( id: i32, current_user: CurrentUser) -> String {
+...
+}
+
+#[get("/<_id>/edit", format = "text/html", rank = 2)]
+pub fn edit_no_user(_id: i32) -> Flash<Redirect> {
+    Flash::error(Redirect::to("/"), "Not authorized.")
+}'}}
         </pre>
         By default the ranking for routes is like this:
         <table>
@@ -77,7 +92,7 @@ pub fn something() -> Template {
       </p>
       <h2>Multiple Segments</h2>
       <p>
-        The action can also have a single last segment that can be a multiple fragments. The format is: <code>{{payload.04}}</code>. The argument must implement <a href="https://api.rocket.rs/rocket/request/trait.FromSegments.html" target="_blank">FromSegments</a> trait. It's usually useful for implementing access to file directly. Be careful with this, since it might be prone to path traversal attack. The Rocket's implementation of <code>PathBuf</code> is considering such attack.
+        The action can also have a single last segment that can be a multiple fragments. The format is: <code>{{'<type...>'}}</code>. The argument must implement <a href="https://api.rocket.rs/rocket/request/trait.FromSegments.html" target="_blank">FromSegments</a> trait. It's usually useful for implementing access to file directly. Be careful with this, since it might be prone to path traversal attack. The Rocket's implementation of <code>PathBuf</code> is considering such attack.
         <br>
         Hangar's assets is an example of this.
       </p>
@@ -87,9 +102,10 @@ pub fn something() -> Template {
       </p>
       <h2>Handling Body Data</h2>
       <p>
-        Body data can be handled by putting <code>{{payload.05}}</code> in the annotation like this:
+        Body data can be handled by putting <code>{{'data = "<your_type>"'}}</code> in the annotation like this:
         <pre>
-{{payload.06}}
+{{'#[post("/", data = "<your_type>")]
+fn new(your_type: YourStruct) -> String { ... }'}}
         </pre>
         <code>YourStruct</code> must implement <a href="https://api.rocket.rs/rocket/data/trait.FromData.html" target="_blank">FromData</a> trait.
       </p>
@@ -121,14 +137,25 @@ struct MyType {
       <p>
         For JSON body, you can easily use <a href="https://api.rocket.rs/rocket_contrib/struct.Json.html">Json</a> struct to deserialize object. You must implement <a href="https://docs.serde.rs/serde/trait.Deserialize.html">Deserialize</a> trait from <code>serde_json</code> for your <code>struct</code>. You can do that easily by using <code>#[derive(Deserialize)]</code> macro for struct that use only supported types. For example:
         <pre>
-{{payload.07}}
+{{'#[derive(Serialize, Deserialize, Debug, FromForm)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+#[post("/points/", format = "application/json", data = "<point>")]
+fn new_point(point: Json<Point>) {
+    ...
+}'}}
         </pre>
       </p>
       <h2>Query Strings</h2>
       <p>
         For Query Strings, you can use any <code>struct</code> that implement <code>FromForm</code> explained above as the query parameters:
         <pre>
-{{payload.08}}
+{{'#[get("/points?<point>")]
+fn new(point: Point) -> String { ... }
+'}}
         </pre>
       </p>
       <h2>Validating</h2>
@@ -145,7 +172,7 @@ struct MyType {
         <br>
         You can implement a type which can acts as a Request Guard by implementing <a href="https://api.rocket.rs/rocket/request/trait.FromRequest.html" target="_blank">FromRequest</a> trait. For example:
         <pre>
-{{payload.09}}
+{{payload.01}}
         </pre>
       </p>
       <h2>Cookie</h2>
@@ -154,7 +181,7 @@ struct MyType {
       </p>
       <h2>State</h2>
       <p>
-        State is another type that can be used as Request Guard. You can put it in <code>src/libs/init.rs</code>
+        State is another type that can be used as Request Guard. You can put it in <code>src/libs/init.rs</code>.
       </p>
     </div>
   </div>
