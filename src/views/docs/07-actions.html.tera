@@ -6,7 +6,156 @@
   <div class="column is-10">
     <div class="content">
       <h1>Actions</h1>
-      <p>TBA</p>
+      <p>
+        Action is a function that receives a request and returns a response. To make an action you can use procedural macro provided by <code>rocket-codegen</code> on the top of the function. For example in <code>posts_controller</code> we have a public function:
+        <pre>
+#[get("/something")]
+pub fn something() -> Template {
+    let context = ViewModel::new(DefaultHeader::default(), DefaultBody::default());
+    Template::render("pages/something", &context)
+}
+        </pre>
+        The example above indicates the action would create endpoint <code>GET /something</code>. But remember before in <a href="/docs/05-routes">routes</a> that we can mount controllers to a namespace like this: <code>mount("/posts", routes![posts_controller::something])</code>, so the final endpoint would be <code>GET /posts/something</code>.
+      </p>
+      <h2>Methods</h2>
+      <p>
+        The valid methods for an action are: <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>,<code>delete</code>, <code>head</code>, and <code>options</code>.
+        For <code>head</code> request, it will be automatically returned if there's a valid <code>get</code>. The body will be stripped automatically.
+      </p>
+      <h2>Dynamic Action</h2>
+      <p>
+        You can make an action dynamic by putting path segment in an angle bracket <code><></code>.
+        <br>
+        For example you might have this route: <code>{{payload.01}}</code>. The dynamic part of the path must be used as a argument in the function and the argument type must implement <a href="https://api.rocket.rs/rocket/request/trait.FromParam.html" target="_blank">FromParam</a> trait.
+       <pre>
+{{payload.02}}
+       </pre>
+      </p>
+      <h2>Route Rankings</h2>
+      <p>
+        You can have have more than one function with the same route but it must have different rankings.
+        <pre>
+{{payload.03}}
+        </pre>
+        By default the ranking for routes is like this:
+        <table>
+          <thead>
+            <tr>
+              <th>static path</th>
+              <th>query string</th>
+              <th>rank</th>
+              <th>example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>yes</td>
+              <td>yes</td>
+              <td>-4</td>
+              <td><code>/some?query=something</code></td>
+            </tr>
+            <tr>
+              <td>yes</td>
+              <td>no</td>
+              <td>-3</td>
+              <td><code>/some</code></td>
+            </tr>
+            <tr>
+              <td>no</td>
+              <td>yes</td>
+              <td>-2</td>
+              <td><code>/&lt;some&gt;?query=something</code></td>
+            </tr>
+            <tr>
+              <td>no</td>
+              <td>no</td>
+              <td>-1</td>
+              <td><code>/&lt;some&gt;</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </p>
+      <h2>Multiple Segments</h2>
+      <p>
+        The action can also have a single last segment that can be a multiple fragments. The format is: <code>{{payload.04}}</code>. The argument must implement <a href="https://api.rocket.rs/rocket/request/trait.FromSegments.html" target="_blank">FromSegments</a> trait. It's usually useful for implementing access to file directly. Be careful with this, since it might be prone to path traversal attack. The Rocket's implementation of <code>PathBuf</code> is considering such attack.
+        <br>
+        Hangar's assets is an example of this.
+      </p>
+      <h2>Format</h2>
+      <p>
+        An action by default accept all <code>Content-Type</code>. If you want to make a different function for different <code>Content-Type</code> you must put it in the format part. For example: <code>#[get("/something" format="text/html")]</code> or <code>#[get("/something" format="application/json")]</code>
+      </p>
+      <h2>Handling Body Data</h2>
+      <p>
+        Body data can be handled by putting <code>{{payload.05}}</code> in the annotation like this:
+        <pre>
+{{payload.06}}
+        </pre>
+        <code>YourStruct</code> must implement <a href="https://api.rocket.rs/rocket/data/trait.FromData.html" target="_blank">FromData</a> trait.
+      </p>
+      <p>
+        For handling form, Rocket has 2 built in handler, the first one is <a href="https://api.rocket.rs/rocket/request/struct.Form.html" target="_blank">Form</a> and <a href="https://api.rocket.rs/rocket/request/struct.LenientForm.html" target="_blank">LenientForm</a>.
+        You can use <code>Form</code> and <code>LenientForm</code> for <code>struct</code> that implement <a href="https://api.rocket.rs/rocket/request/trait.FromForm.html" target="_blank">FromForm</a> type.
+        You can easily do that by deriving <code>FromForm</code> for your struct like this:
+        <pre>
+#[derive(FromForm)]
+struct MyType {
+  id: i32,
+  name: String
+}
+        </pre>
+        Or you can implement yourself. Use <code>LenientForm</code> if incoming parameters might be a superset of the struct. For example if you have <code>id</code> and <code>name</code> field, but the incoming parameters might be <code>id</code>, <code>name</code>, <code>address</code>, use <code>LenientForm</code>.
+      </p>
+      <h2>Field Renaming</h2>
+      <p>
+        You can also rename parameters to different struct field name. It might be useful if you want to hide backend's column name, or you want to use Rust reserved words for http request parameters. In the example below the parameters will contain body with id field, but the struct backend is using uuid as its name.
+        <pre>
+#[derive(FromForm)]
+struct MyType {
+    #[form(field = "id")]
+    uuid: String
+}
+        </pre>
+      </p>
+      <h2>JSON</h2>
+      <p>
+        For JSON body, you can easily use <a href="https://api.rocket.rs/rocket_contrib/struct.Json.html">Json</a> struct to deserialize object. You must implement <a href="https://docs.serde.rs/serde/trait.Deserialize.html">Deserialize</a> trait from <code>serde_json</code> for your <code>struct</code>. You can do that easily by using <code>#[derive(Deserialize)]</code> macro for struct that use only supported types. For example:
+        <pre>
+{{payload.07}}
+        </pre>
+      </p>
+      <h2>Query Strings</h2>
+      <p>
+        For Query Strings, you can use any <code>struct</code> that implement <code>FromForm</code> explained above as the query parameters:
+        <pre>
+{{payload.08}}
+        </pre>
+      </p>
+      <h2>Validating</h2>
+      <p>
+        You can implement <a href="https://api.rocket.rs/rocket/request/trait.FromFormValue.html" target="_blank">FromFormValue</a> trait to validate automatically or you can read <a href="/09-models">Models</a> chapter as another way to do validation using <code>Validator</code> crates.
+      </p>
+      <h2>Multipart Data</h2>
+      <p>
+        Hangar has support for multipart data, please see <a href="/docs/13-multipart-upload">Multipart Upload</a> part for handling multipart data.
+      </p>
+      <h2>Request Guard</h2>
+      <p>
+        You can add additional parameters to the action function which will acts as a <code>Request Guard</code>. For example an application might need authentication by parsing access token in headers.
+        <br>
+        You can implement a type which can acts as a Request Guard by implementing <a href="https://api.rocket.rs/rocket/request/trait.FromRequest.html" target="_blank">FromRequest</a> trait. For example:
+        <pre>
+{{payload.09}}
+        </pre>
+      </p>
+      <h2>Cookie</h2>
+      <p>
+        Cookie is another type that acts as Request Guard. You can see it in <a href="/docs/11-cookies">Cookies</a>.
+      </p>
+      <h2>State</h2>
+      <p>
+        State is another type that can be used as Request Guard. You can put it in <code>src/libs/init.rs</code>
+      </p>
     </div>
   </div>
 </div>

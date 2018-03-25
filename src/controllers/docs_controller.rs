@@ -82,7 +82,75 @@ pub fn _06() -> Template {
 
 #[get("/07-actions")]
 pub fn _07() -> Template {
-    let context = default_view_model();
+    let mut context = default_view_model();
+    context.payload.insert("01".to_string(), "/users/<uuid>".into());
+    context.payload.insert("02".to_string(), "impl FromParam for CustomType {
+...
+}
+
+#[get(\"/users/<uuid>\")]
+fn show(uuid: &CustomType) -> String {
+    format!(\"UUID is: {}\", uuid.as_str())
+}".into());
+    context.payload.insert("03".to_string(), "#[get(\"/<id>/edit\", format = \"text/html\")]
+pub fn edit( id: i32, current_user: CurrentUser) -> String {
+...
+}
+
+#[get(\"/<_id>/edit\", format = \"text/html\", rank = 2)]
+pub fn edit_no_user(_id: i32) -> Flash<Redirect> {
+    Flash::error(Redirect::to(\"/\"), \"Not authorized.\")
+}".into());
+    context.payload.insert("04".to_string(), "<type...>".into());
+    context.payload.insert("05".to_string(), "data = \"<your_type>\"".into());
+    context.payload.insert("06".to_string(), "#[post(\"/\", data = \"<your_type>\")]
+fn new(your_type: YourStruct) -> String { ... }".into());
+    context.payload.insert("07".to_string(), "#[derive(Serialize, Deserialize, Debug, FromForm)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+#[post(\"/points/\", format = \"application/json\", data = \"<point>\")]
+fn new_point(point: Json<Point>) {
+    ...
+}".into());
+    context.payload.insert("08".to_string(), "#[get(\"/points?<point>\")]
+fn new(point: Point) -> String { ... }
+".into());
+    context.payload.insert("09".to_string(), "use rocket::Outcome;
+use rocket::http::Status;
+use rocket::request::{self, Request, FromRequest};
+
+struct AccessToken(String);
+
+/// Returns true if `access_token` is valid.
+fn is_valid(token: &str) -> bool {
+    token == \"access_token\"
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for AccessToken {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<AccessToken, ()> {
+        let keys: Vec<_> = request.headers().get(\"x-access-token\").collect();
+        if keys.len() != 1 {
+            return Outcome::Failure((Status::BadRequest, ()));
+        }
+
+        let key = keys[0];
+        if !is_valid(keys[0]) {
+            return Outcome::Forward(());
+        }
+
+        return Outcome::Success(AccessToken(key.to_string()));
+    }
+}
+
+#[get(\"/protected\")]
+fn protected(key: AccessToken) -> &'static str {
+    \"Authenticated.\"
+}".into());
     Template::render("docs/07-actions", &context)
 }
 

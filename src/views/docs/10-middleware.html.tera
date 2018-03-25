@@ -11,6 +11,13 @@
         <br>
         By default Hangar already includes middleware to lowercase the request, log the request, and use Tera template.
       </p>
+      <h2>State</h2>
+      <p>
+        You can put state in Rocket</a>. In Hangar the convention is to use <code>src/libs/init.rs</code>.
+        <br>
+        By default Hangar already includes a couple of State, for example database connection which you can use: <code>ConnPool</code> for database connection and <code>State&lt;Settings&gt;</code>.
+      </p>
+
     </div>
   </div>
 </div>

@@ -7,7 +7,7 @@
     <div class="content">
       <h1>Cookies</h1>
       <p>
-        Cookie is <a href="https://rocket.rs/guide/requests/#cookies" target="_blank">builtin in Rocket</a>, so we can just use it as usual. For example adding and getting cookie:
+        Cookie is <a href="https://rocket.rs/guide/requests/#cookies" target="_blank">builtin Request Guard in Rocket</a>, so we can just use it as usual. For example adding and getting cookie:
         <pre>
 use rocket::http::{Cookie, Cookies};
 
