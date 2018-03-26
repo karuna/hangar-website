@@ -11,12 +11,12 @@
         <br>
         You can see an example of uploading multipart form like this:
         <pre>
-use rocket::Data;
+{{'use rocket::Data;
 use rocket::http::ContentType;
 use multipart::server::Multipart;
 use multipart::server::save::SaveResult::*;
 
-#[post("/upload", data = "<&zwj;data>")]
+#[post("/upload", data = "<data>")]
 pub fn upload(cont_type: &ContentType, data: Data) -> Result<Template, Template> {
     if !cont_type.is_form_data() {
         let body = json!({
@@ -69,7 +69,7 @@ fn process_upload(boundary: &str, data: Data) -> Result<String, String> {
     });
 
     Ok(String::from("Success"))
-}
+}'}}
         </pre>
       </p>
     </div>

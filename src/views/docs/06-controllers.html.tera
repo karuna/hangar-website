@@ -7,14 +7,14 @@
     <div class="content">
       <h1>Controllers</h1>
       <p>
-        A Controller is just a way to combine various action in the same namespace together.
+        A Controller is just a way to combine various actions in the same namespace together.
         <br>
         There are two ways to do that in Hangar Framework, the first one is by adding that in <code>src/controllers/</code> folder, or by adding the controllers in <code>src/apis/</code>.
         <br>
         The idea is <code>src/controllers</code> will be for handling regular requests, while <code>src/apis/</code> is for handing API requests.
       </p>
       <p>
-        To make a new controller just make a new rust file and include it in either <code>src/controllers/mod.rs</code> or <code>src/apis.mod.rs</code>.
+        To make a new controller just make a new Rust file and include it in either <code>src/controllers/mod.rs</code> or <code>src/apis.mod.rs</code>.
         <br>
         For example in <code>src/apis/mod.rs</code>:
       </p>
@@ -35,7 +35,6 @@ pub fn endpoint2() -> &'static str {
     "Endpoint2"
 }
       </pre>
-
     </div>
   </div>
 </div>

@@ -46,7 +46,40 @@ pub fn _06() -> Template {
 
 #[get("/07-actions")]
 pub fn _07() -> Template {
-    let context = default_view_model();
+    let mut context = default_view_model();
+    context.payload.insert("01".to_string(), "use rocket::Outcome;
+use rocket::http::Status;
+use rocket::request::{self, Request, FromRequest};
+
+struct AccessToken(String);
+
+/// Returns true if `access_token` is valid.
+fn is_valid(token: &str) -> bool {
+    token == \"access_token\"
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for AccessToken {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<AccessToken, ()> {
+        let keys: Vec<_> = request.headers().get(\"x-access-token\").collect();
+        if keys.len() != 1 {
+            return Outcome::Failure((Status::BadRequest, ()));
+        }
+
+        let key = keys[0];
+        if !is_valid(keys[0]) {
+            return Outcome::Forward(());
+        }
+
+        return Outcome::Success(AccessToken(key.to_string()));
+    }
+}
+
+#[get(\"/protected\")]
+fn protected(key: AccessToken) -> &'static str {
+    \"Authenticated.\"
+}".into());
     Template::render("docs/07-actions", &context)
 }
 
@@ -58,7 +91,17 @@ pub fn _08() -> Template {
 
 #[get("/09-models")]
 pub fn _09() -> Template {
-    let context = default_view_model();
+    let mut context = default_view_model();
+    context.payload.insert("01".to_string(), "use validator::Validate;
+...
+#[derive(Validate, Insertable, Serialize)]
+#[table_name = \"posts\"]
+pub struct NewPost<'a> {
+    pub user_id: i32,
+    #[validate(length(min = \"1\"))]
+    pub title: String,
+    pub body: Option<&'a String>,
+}".into());
     Template::render("docs/09-models", &context)
 }
 
@@ -76,7 +119,8 @@ pub fn _11() -> Template {
 
 #[get("/12-users")]
 pub fn _12() -> Template {
-    let context = default_view_model();
+    let mut context = default_view_model();
+    context.payload.insert("01".to_string(), "/users/<id>".into());
     Template::render("docs/12-users", &context)
 }
 
@@ -106,7 +150,23 @@ pub fn _16() -> Template {
 
 #[get("/17-sanitizer")]
 pub fn _17() -> Template {
-    let context = default_view_model();
+    let mut context = default_view_model();
+    context.payload.insert("01".to_string(), "#[derive(Debug, Serialize)]
+struct TestView<'a> {
+    content: &'a SanitizedStr,
+}
+
+#[get(\"/sanitized\")]
+pub fn sanitized() -> Template {
+    let header = DefaultHeader {
+        title: String::from(\"Sanitized\"),
+    };
+    let test_str =
+        SanitizedStr::new(\"<b><img src='' onerror='alert(\\'hax\\')'>I cannot hack you</b>\");
+    let body = TestView { content: &test_str };
+    let context = ViewModel::new(&header, &body);
+    Template::render(\"pages/sanitize\", &context)
+}".into());
     Template::render("docs/17-sanitizer", &context)
 }
 
@@ -127,7 +187,6 @@ pub fn _20() -> Template {
     let context = default_view_model();
     Template::render("docs/20-test", &context)
 }
-
 
 #[get("/21-deploying")]
 pub fn _21() -> Template {

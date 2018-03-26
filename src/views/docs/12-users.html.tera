@@ -13,7 +13,7 @@
       </p>
       <h2>Login, Logout, Signin, Signup</h2>
       <p>
-        Hangar has built in pages for user information, login, logout, signin, and signup in: <code>/users/<&zwj;id></code>, <code>/users/login</code>, <code>/users/logout</code>, <code>/users/sigin</code>, <code>/users/signup</code>.
+        Hangar has built in pages for user information, login, logout, signin, and signup in: <code>{{payload.01}}</code>, <code>/users/login</code>, <code>/users/logout</code>, <code>/users/sigin</code>, <code>/users/signup</code>.
         <br>
         It might be a security problem if you don't need it, so you can remove the actions and view files from <code>src/libs/routes.rs</code>, <code>src/controllers/users_controller.rs</code> and <code>src/views/users</code>.
       </p>
